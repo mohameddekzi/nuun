@@ -5,7 +5,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
   return (
     <>
       <Header />
-      <main className="flex flex-col min-h-screen">{children}</main>
+      <main className="flex flex-col min-h-screen animate-page-enter">{children}</main>
       <Footer />
     </>
   );

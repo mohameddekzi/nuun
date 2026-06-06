@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { NuunLogoMark } from "@/components/ui/nuun-logo";
 import { cn } from "@/lib/utils/cn";
 
 const navLinks = [
@@ -55,11 +56,10 @@ export function Header() {
 
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-              <div className="relative w-8 h-8">
-                <div className="absolute inset-0 bg-[#FFD400] rounded-lg rotate-45 group-hover:rotate-[200deg] transition-transform duration-700 ease-out" />
-                <div className="absolute inset-[3px] bg-[#0A0A0A] rounded-sm rotate-45" />
-                <span className="absolute inset-0 flex items-center justify-center text-[#FFD400] font-black text-xs z-10 select-none">N</span>
-              </div>
+              <NuunLogoMark
+                height={26}
+                className="group-hover:scale-105 transition-transform duration-300"
+              />
               <span className="text-white font-bold text-base sm:text-lg tracking-tight leading-none">
                 NUUN <span className="text-[#FFD400]">MEDIA</span>
               </span>
@@ -138,7 +138,10 @@ export function Header() {
             >
               {/* Drawer header */}
               <div className="flex items-center justify-between px-5 py-5 border-b border-white/[0.06]">
-                <span className="text-white font-bold text-sm">Navigation</span>
+                <div className="flex items-center gap-2">
+                  <NuunLogoMark height={20} />
+                  <span className="text-white font-bold text-sm">NUUN MEDIA</span>
+                </div>
                 <button
                   onClick={() => setMobileOpen(false)}
                   className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/[0.05] text-white/50 hover:text-white"

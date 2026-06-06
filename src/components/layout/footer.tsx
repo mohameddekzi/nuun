@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { NuunLogoMark } from "@/components/ui/nuun-logo";
 import { useState } from "react";
 
 const footerLinks = {
@@ -58,11 +59,10 @@ export function Footer() {
           {/* Brand col */}
           <div className="sm:col-span-2">
             <Link href="/" className="inline-flex items-center gap-2.5 mb-5 group">
-              <div className="relative w-9 h-9">
-                <div className="absolute inset-0 bg-[#FFD400] rounded-lg rotate-45 group-hover:rotate-[135deg] transition-transform duration-500" />
-                <div className="absolute inset-[3px] bg-[#0A0A0A] rounded-sm rotate-45" />
-                <span className="absolute inset-0 flex items-center justify-center text-[#FFD400] font-black text-xs z-10">N</span>
-              </div>
+              <NuunLogoMark
+                height={30}
+                className="group-hover:scale-105 transition-transform duration-300"
+              />
               <span className="text-white font-bold text-base sm:text-lg tracking-tight">
                 NUUN <span className="text-[#FFD400]">MEDIA</span>
               </span>
