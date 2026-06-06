@@ -391,5 +391,225 @@ create policy "analytics_insert" on public.analytics for insert with check (true
 create policy "analytics_read" on public.analytics for select using (auth.role() = 'authenticated');
 
 -- ----------------------------------------------------------------
--- Done!
+-- PRICING PLANS (seed)
+-- ----------------------------------------------------------------
+insert into public.pricing_plans (name, slug, description, price, currency, period, features, is_popular, is_active, order_index) values
+(
+  'Starter',
+  'starter',
+  'Perfect for small businesses and startups looking to establish their brand presence.',
+  500, 'USD', 'project',
+  '["Brand identity consultation","Logo design (3 concepts)","Business card design","Social media kit (5 templates)","2 revision rounds","Delivery in 2 weeks"]'::jsonb,
+  false, true, 1
+),
+(
+  'Professional',
+  'professional',
+  'Comprehensive solution for growing businesses that need a full brand and media presence.',
+  1500, 'USD', 'project',
+  '["Everything in Starter","Full brand guidelines document","10 social media templates","1 promotional video (60s)","Website UI design (5 pages)","4 revision rounds","Delivery in 4 weeks","3 months post-launch support"]'::jsonb,
+  true, true, 2
+),
+(
+  'Enterprise',
+  'enterprise',
+  'End-to-end creative partnership for large organizations with ongoing media needs.',
+  null, 'USD', 'project',
+  '["Everything in Professional","Dedicated creative team","Monthly content calendar","Video production (up to 5 min)","Event branding package","Motion graphics & animations","Unlimited revisions","Priority 24/7 support","Quarterly strategy review"]'::jsonb,
+  false, true, 3
+)
+on conflict (slug) do nothing;
+
+-- ----------------------------------------------------------------
+-- PORTFOLIO PROJECTS (seed)
+-- ----------------------------------------------------------------
+insert into public.projects (title, slug, description, client, category_id, year, is_featured, is_active, order_index) values
+(
+  'Hormuud Telecom Rebrand',
+  'hormuud-rebrand',
+  'Complete visual identity overhaul for Somalia''s leading telecommunications company. Delivered a modern, scalable brand system with updated logo, color palette, and comprehensive brand guidelines.',
+  'Hormuud Telecom',
+  (select id from public.project_categories where slug = 'branding'),
+  2025, true, true, 1
+),
+(
+  'Somali Investment Forum',
+  'somali-investment-forum',
+  'Full event branding package for the annual Somali Investment Forum. Included stage design, print materials, digital assets, and live event media coverage.',
+  'Ministry of Finance',
+  (select id from public.project_categories where slug = 'branding'),
+  2025, false, true, 2
+),
+(
+  'East Africa Finance Campaign',
+  'eaf-digital-campaign',
+  'Multi-channel digital marketing campaign targeting East African financial markets. Included social media strategy, motion graphics, and performance-driven ad creatives.',
+  'East Africa Finance',
+  (select id from public.project_categories where slug = 'social-media'),
+  2024, true, true, 3
+),
+(
+  'TechStart Brand Launch',
+  'techstart-launch',
+  'End-to-end brand launch for a Mogadishu-based technology startup. From naming and logo to launch video and digital presence.',
+  'TechStart Somalia',
+  (select id from public.project_categories where slug = 'branding'),
+  2024, false, true, 4
+),
+(
+  'Nuun Media Showreel 2025',
+  'nuun-showreel-2025',
+  'Annual showreel showcasing the best work produced by Nuun Media. High-energy motion graphics and cinematic footage representing the breadth of our creative output.',
+  'Nuun Media',
+  (select id from public.project_categories where slug = 'video-production'),
+  2025, false, true, 5
+),
+(
+  'Amal Bank Motion Identity',
+  'amal-bank-motion',
+  'Motion graphics package for Amal Bank''s internal and external communications. Included animated logo, lower-thirds, and a suite of social media animations.',
+  'Amal Bank',
+  (select id from public.project_categories where slug = 'motion-graphics'),
+  2024, false, true, 6
+)
+on conflict (slug) do nothing;
+
+-- ----------------------------------------------------------------
+-- BLOG POSTS (seed)
+-- ----------------------------------------------------------------
+insert into public.blog_posts (title, slug, excerpt, content, category_id, tags, is_published, is_featured, read_time, published_at) values
+(
+  'The Future of Branding in East Africa',
+  'future-of-branding-east-africa',
+  'East Africa is experiencing a branding renaissance. Here''s how forward-thinking companies are building identities that resonate locally and compete globally.',
+  'East Africa is experiencing a branding renaissance. Here''s how forward-thinking companies are building identities that resonate locally and compete globally.
+
+The most successful brands in the region are those that authentically blend cultural heritage with modern design sensibilities. They don''t try to copy Western aesthetics — they forge their own visual language.
+
+Key trends we''re seeing:
+
+**1. Cultural authenticity over imitation**
+Brands that lean into local cultural motifs, colors, and storytelling are seeing stronger consumer connections. The Somali geometric patterns, the vibrant East African color palettes — these are assets, not limitations.
+
+**2. Mobile-first brand experiences**
+With smartphone penetration driving most digital interactions, brands must be optimized for small screens first. This means simpler logos, bold typography, and visual systems that work at thumbnail scale.
+
+**3. Video as the primary communication medium**
+Short-form video content is now the most effective way to build brand awareness in the region. Brands that invest in video production — even at modest budgets — see dramatically higher engagement rates.
+
+At Nuun Media, we help organizations navigate these trends with strategic clarity and creative precision.',
+  (select id from public.blog_categories where slug = 'branding'),
+  '["branding","east africa","design trends"]'::jsonb,
+  true, true, 6,
+  now() - interval '10 days'
+),
+(
+  '5 Motion Design Trends Shaping Digital Communication',
+  'motion-design-trends-2025',
+  'Motion graphics have evolved from decorative elements to essential communication tools. Discover the five trends redefining how brands tell their stories through motion.',
+  'Motion graphics have evolved from decorative elements to essential communication tools. Discover the five trends redefining how brands tell their stories through motion.
+
+**1. Kinetic typography**
+Text that moves with purpose. Words that emphasize, reveal, and guide attention. When typography becomes motion, messages land harder.
+
+**2. Minimalist micro-animations**
+Subtle, purposeful animations in UI and brand touchpoints. A button that breathes, a logo that draws itself in — these small moments build memorable brand experiences.
+
+**3. 3D integration with 2D design**
+Mixing flat design with dimensional elements creates visual depth that stands out in crowded feeds. The contrast between flat and 3D creates visual tension that captures attention.
+
+**4. Loop-optimized social content**
+Animations designed to loop seamlessly for social media consumption. Content that rewards repeated viewing builds deeper brand familiarity.
+
+**5. Data visualization in motion**
+Turning complex information into engaging animated infographics. Data that moves is data that sticks.',
+  (select id from public.blog_categories where slug = 'design'),
+  '["motion design","animation","digital","trends"]'::jsonb,
+  true, false, 5,
+  now() - interval '20 days'
+),
+(
+  'Building a Corporate Social Media Strategy That Actually Works',
+  'corporate-social-media-strategy',
+  'Most corporate social media accounts blend into the noise. Here''s how to build a strategy that cuts through and drives real business outcomes.',
+  'Most corporate social media accounts blend into the noise. Here''s how to build a strategy that cuts through and drives real business outcomes.
+
+The biggest mistake corporate accounts make is treating social media as a broadcast channel. They push messages out without inviting conversation, without showing the human side of their organization.
+
+**Start with your audience, not your product**
+Your followers don''t want to hear about your products every day. They want to learn something, be entertained, or feel connected to something bigger than a transaction.
+
+**The 70-20-10 content rule**
+- 70% educational or entertaining content related to your industry
+- 20% content that builds your brand personality
+- 10% direct promotional content
+
+**Consistency beats frequency**
+Posting three times a week consistently outperforms posting daily for a month then going dark. Build a sustainable content calendar that your team can actually maintain.
+
+**Video first, always**
+Algorithms across all major platforms favor video content. Even simple, well-lit phone videos outperform static images in reach and engagement.',
+  (select id from public.blog_categories where slug = 'digital-marketing'),
+  '["social media","strategy","corporate","content"]'::jsonb,
+  true, false, 7,
+  now() - interval '32 days'
+),
+(
+  'Why Every Business Needs Professional Video Production',
+  'why-professional-video-production',
+  'In a world where attention is the scarcest resource, video is the most effective tool for capturing and holding it. Here''s why professional production quality matters more than ever.',
+  'In a world where attention is the scarcest resource, video is the most effective tool for capturing and holding it.
+
+Consumer expectations for video quality have risen dramatically. Audiences trained on Netflix and high-production social content can immediately feel the difference between professional and amateur production — and that quality gap affects how they perceive your brand.
+
+**The ROI of professional video**
+Research consistently shows that professionally produced video content:
+- Increases landing page conversions by up to 80%
+- Improves email open rates when included in subject lines
+- Extends average time spent on websites significantly
+- Generates more social shares than any other content format
+
+**What professional production actually means**
+It''s not just about expensive cameras. Professional production means:
+- Intentional lighting that flatters subjects and creates mood
+- Clean, professional audio (often more important than video quality)
+- Thoughtful composition and movement
+- Post-production color grading and sound design
+- A clear narrative structure that serves your communication goals
+
+At Nuun Media, we approach every video project as a storytelling opportunity — not just a recording session.',
+  (select id from public.blog_categories where slug = 'design'),
+  '["video production","marketing","brand"]'::jsonb,
+  true, false, 5,
+  now() - interval '45 days'
+)
+on conflict (slug) do nothing;
+
+-- ----------------------------------------------------------------
+-- TEAM MEMBERS
+-- ----------------------------------------------------------------
+create table if not exists public.team_members (
+  id          uuid primary key default gen_random_uuid(),
+  name        text not null,
+  position    text,
+  bio         text,
+  avatar_url  text,
+  social_links jsonb default '{}',
+  order_index integer default 0,
+  is_active   boolean default true,
+  created_at  timestamptz default now()
+);
+alter table public.team_members enable row level security;
+create policy "team_read"  on public.team_members for select using (true);
+create policy "team_write" on public.team_members for all using (auth.role() = 'authenticated');
+
+insert into public.team_members (name, position, bio, order_index, is_active) values
+  ('Hassan Nur',     'Founder & Creative Director',   'With over a decade of experience in brand strategy and visual communication, Hassan founded Nuun Media with a vision to elevate creative standards across East Africa.',                                                                        1, true),
+  ('Fatima Warsame', 'Head of Motion & Production',   'Fatima leads our video and motion graphics department, bringing cinematic quality and narrative depth to every production. She has directed over 80 corporate films.',                                                                            2, true),
+  ('Abdi Mohamed',   'Brand Strategy Lead',           'Abdi bridges the gap between business objectives and creative execution. His strategic frameworks have shaped brand transformations for clients across finance, telecom, and government.',                                                         3, true),
+  ('Amina Hassan',   'Digital & Social Media Director','Amina oversees digital strategy and social media execution for all client accounts, combining data analytics with creative instinct to deliver measurable results.',                                                                              4, true),
+  ('Omar Sheikh',    'Senior Designer',               'Omar''s work spans brand identity, print, and digital design. His attention to craft and precision makes him the studio''s go-to for complex visual systems.',                                                                                    5, true);
+
+-- ----------------------------------------------------------------
+-- Done! All tables created and seeded.
 -- ----------------------------------------------------------------

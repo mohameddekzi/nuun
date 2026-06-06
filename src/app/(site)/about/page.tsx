@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { motion } from "framer-motion";
 import { AboutSection } from "@/components/sections/about-section";
 import { CTASection } from "@/components/sections/cta-section";
 import { AboutHero } from "@/components/sections/about-hero";
