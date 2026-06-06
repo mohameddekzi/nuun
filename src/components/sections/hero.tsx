@@ -62,13 +62,13 @@ function StatCounter({
       ref={ref}
       initial={{ opacity: 0, y: 12 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: delay + 0.2 }}
-      className="flex flex-col items-center"
+      transition={{ duration: 0.6, delay: delay + 0.3 }}
+      className="flex flex-col items-center gap-1"
     >
-      <div className="text-[clamp(1.75rem,5vw,2.75rem)] font-black text-[#FFD400] leading-none mb-1">
+      <div className="text-[clamp(1.75rem,5vw,2.75rem)] font-black text-[#FFD400] leading-none">
         <motion.span>{rounded}</motion.span>{suffix}
       </div>
-      <div className="text-white/40 text-[10px] sm:text-xs tracking-wider uppercase text-center leading-tight">
+      <div className="text-white/40 text-[10px] sm:text-xs tracking-wider uppercase text-center">
         {label}
       </div>
     </motion.div>
@@ -81,10 +81,10 @@ export function HeroSection() {
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const smoothX = useSpring(mouseX, { stiffness: 40, damping: 25 });
-  const smoothY = useSpring(mouseY, { stiffness: 40, damping: 25 });
-  const rotateX = useTransform(smoothY, [-400, 400], [4, -4]);
-  const rotateY = useTransform(smoothX, [-400, 400], [-4, 4]);
+  const smoothX = useSpring(mouseX, { stiffness: 30, damping: 30 });
+  const smoothY = useSpring(mouseY, { stiffness: 30, damping: 30 });
+  const rotateX = useTransform(smoothY, [-400, 400], [3, -3]);
+  const rotateY = useTransform(smoothX, [-400, 400], [-3, 3]);
 
   useEffect(() => {
     const id = setInterval(() => setWordIndex((i) => (i + 1) % words.length), 2800);
@@ -106,17 +106,17 @@ export function HeroSection() {
       onMouseMove={onMouseMove}
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#0A0A0A] pt-16 md:pt-20"
     >
-      {/* Background layers */}
-      <div className="absolute inset-0 grid-pattern pointer-events-none" />
-      <div className="absolute inset-0 glow-center pointer-events-none" />
+      {/* Subtle grid pattern only */}
+      <div className="absolute inset-0 grid-pattern opacity-40 pointer-events-none" />
 
-      {/* Large logo watermark — animated path draw */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
-        <svg
-          viewBox="0 0 300 190"
-          fill="none"
-          className="w-[80vw] sm:w-[62vw] lg:w-[50vw] opacity-[0.055]"
-        >
+      {/* Single radial glow — kept subtle */}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse 60% 55% at 50% 50%, rgba(255,212,0,0.05) 0%, transparent 70%)" }}
+      />
+
+      {/* Logo mark — positioned RIGHT side, very faint, NOT overlapping text */}
+      <div className="absolute right-[-5%] top-1/2 -translate-y-1/2 pointer-events-none hidden lg:block">
+        <svg viewBox="0 0 300 190" fill="none" className="w-[38vw] opacity-[0.04]">
           <motion.path
             d={NUUN_LOGO_PATH}
             stroke="#FFD400"
@@ -126,57 +126,50 @@ export function HeroSection() {
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 1 }}
             transition={{
-              pathLength: { duration: 2.5, ease: [0.16, 1, 0.3, 1], delay: 0.6 },
-              opacity: { duration: 0.4, delay: 0.6 },
+              pathLength: { duration: 2.8, ease: [0.16, 1, 0.3, 1], delay: 0.8 },
+              opacity: { duration: 0.5, delay: 0.8 },
             }}
           />
         </svg>
       </div>
 
-      {/* Orbiting ring */}
+      {/* Single slow-orbiting ring — very subtle */}
       <motion.div
         style={{ rotateX, rotateY }}
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
       >
         <motion.div
           animate={{ rotate: 360 }}
-          transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
-          className="w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] lg:w-[900px] lg:h-[900px] rounded-full border border-white/[0.04]"
+          transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+          className="w-[600px] h-[600px] sm:w-[780px] sm:h-[780px] lg:w-[960px] lg:h-[960px] rounded-full border border-white/[0.03]"
         />
       </motion.div>
-      <motion.div
-        animate={{ rotate: -360 }}
-        transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-        className="absolute w-[300px] h-[300px] sm:w-[480px] sm:h-[480px] lg:w-[620px] lg:h-[620px] rounded-full border border-[#FFD400]/[0.05] pointer-events-none"
-      />
 
-      {/* Floating dots */}
+      {/* Floating accent dots — 4 only */}
       {[
-        { x: "12%", y: "22%", d: 0 },
-        { x: "85%", y: "18%", d: 0.6 },
-        { x: "75%", y: "72%", d: 1.2 },
-        { x: "18%", y: "68%", d: 1.8 },
-        { x: "50%", y: "15%", d: 2.4 },
-        { x: "55%", y: "80%", d: 3.0 },
+        { x: "8%",  y: "20%", d: 0 },
+        { x: "88%", y: "16%", d: 0.8 },
+        { x: "80%", y: "74%", d: 1.6 },
+        { x: "10%", y: "70%", d: 2.4 },
       ].map((p, i) => (
         <motion.div
           key={i}
           className="absolute w-1 h-1 rounded-full bg-[#FFD400]"
           style={{ left: p.x, top: p.y }}
-          animate={{ opacity: [0.15, 0.55, 0.15], y: [0, -18, 0] }}
-          transition={{ duration: 4, repeat: Infinity, delay: p.d }}
+          animate={{ opacity: [0.12, 0.45, 0.12], y: [0, -14, 0] }}
+          transition={{ duration: 4.5, repeat: Infinity, delay: p.d }}
         />
       ))}
 
-      {/* ── CONTENT ── */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
+      {/* ── CONTENT — clear vertical stack, lots of breathing room ── */}
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
 
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 mb-6 sm:mb-8"
+          className="mb-8 sm:mb-10"
         >
           <span className="badge-accent">
             <Zap size={10} className="fill-[#FFD400]" />
@@ -189,34 +182,34 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          className="text-[clamp(2.4rem,8vw,7rem)] font-black tracking-tight leading-[0.88] text-white mb-5 sm:mb-6"
+          className="text-[clamp(2.8rem,8.5vw,7.5rem)] font-black tracking-tight leading-[0.9] text-white mb-7 sm:mb-8"
         >
           FROM VISION
           <br />
           <span className="text-[#FFD400]">TO REALITY</span>
         </motion.h1>
 
-        {/* Animated word */}
+        {/* Animated word line */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.35 }}
-          className="flex items-center justify-center gap-2 mb-5 sm:mb-6 h-8 sm:h-10"
+          className="flex items-center justify-center gap-2 mb-6 sm:mb-7 h-8 sm:h-10"
         >
-          <span className="text-white/45 text-base sm:text-xl font-light">Where</span>
+          <span className="text-white/40 text-base sm:text-xl font-light">Where</span>
           <AnimatePresence mode="wait">
             <motion.span
               key={wordIndex}
-              initial={{ opacity: 0, y: 10, filter: "blur(6px)" }}
+              initial={{ opacity: 0, y: 8, filter: "blur(6px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
-              transition={{ duration: 0.45 }}
+              exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
+              transition={{ duration: 0.4 }}
               className="text-white text-base sm:text-xl font-semibold"
             >
               {words[wordIndex]}
             </motion.span>
           </AnimatePresence>
-          <span className="text-white/45 text-base sm:text-xl font-light">Meets Purpose</span>
+          <span className="text-white/40 text-base sm:text-xl font-light">Meets Purpose</span>
         </motion.div>
 
         {/* Description */}
@@ -224,7 +217,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.45 }}
-          className="text-white/50 text-sm sm:text-base lg:text-lg max-w-xl sm:max-w-2xl mx-auto leading-relaxed mb-9 sm:mb-12 px-2"
+          className="text-white/50 text-sm sm:text-base lg:text-lg max-w-xl sm:max-w-2xl mx-auto leading-relaxed mb-10 sm:mb-12 px-2"
         >
           A next-generation creative and media company transforming ideas into measurable,
           real-world impact through purposeful creativity and strategic execution.
@@ -235,7 +228,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.55 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-14 sm:mb-16 lg:mb-20"
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-16 sm:mb-20"
         >
           <Link href="/contact" className="w-full sm:w-auto">
             <Button size="lg" className="w-full sm:w-auto group gap-2.5">
@@ -253,15 +246,15 @@ export function HeroSection() {
           </Link>
         </motion.div>
 
-        {/* Stats — counter animations */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 max-w-2xl md:max-w-3xl mx-auto">
+        {/* Stats row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-10 max-w-2xl md:max-w-3xl mx-auto">
           {stats.map((s, i) => (
             <StatCounter
               key={s.label}
               value={s.value}
               suffix={s.suffix}
               label={s.label}
-              delay={i * 0.1}
+              delay={i * 0.12}
             />
           ))}
         </div>
@@ -271,37 +264,37 @@ export function HeroSection() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.4 }}
+        transition={{ delay: 1.2 }}
         className="absolute bottom-16 sm:bottom-20 left-0 right-0 overflow-hidden pointer-events-none border-y border-white/[0.05]"
       >
         <div className="flex animate-ticker whitespace-nowrap py-2.5">
           {doubled.map((item, i) => (
             <span
               key={i}
-              className="px-7 text-white/20 text-[10px] sm:text-xs font-medium uppercase tracking-[0.2em]"
+              className="px-8 text-white/18 text-[10px] sm:text-xs font-medium uppercase tracking-[0.22em]"
             >
               {item}
-              <span className="mx-4 text-[#FFD400]/25">·</span>
+              <span className="mx-4 text-[#FFD400]/20">·</span>
             </span>
           ))}
         </div>
       </motion.div>
 
       {/* Bottom fade */}
-      <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-[#0A0A0A] to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 inset-x-0 h-28 bg-gradient-to-t from-[#0A0A0A] to-transparent pointer-events-none" />
 
       {/* Scroll cue */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.8 }}
+        transition={{ delay: 1.6 }}
         className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
-        <span className="text-white/25 text-[10px] tracking-[0.2em] uppercase">Scroll</span>
+        <span className="text-white/20 text-[10px] tracking-[0.2em] uppercase">Scroll</span>
         <motion.div
-          animate={{ scaleY: [1, 0.4, 1], opacity: [0.4, 1, 0.4] }}
+          animate={{ scaleY: [1, 0.4, 1], opacity: [0.35, 1, 0.35] }}
           transition={{ duration: 1.8, repeat: Infinity }}
-          className="w-px h-8 bg-gradient-to-b from-[#FFD400]/60 to-transparent origin-top"
+          className="w-px h-8 bg-gradient-to-b from-[#FFD400]/50 to-transparent origin-top"
         />
       </motion.div>
     </section>
