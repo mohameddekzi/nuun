@@ -2,174 +2,165 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { ArrowRight, Play } from "lucide-react";
+import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
+import { ArrowRight, Play, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
-const words = ["Creativity", "Technology", "Innovation", "Excellence", "Transformation"];
+const words = ["Creativity", "Innovation", "Excellence", "Transformation", "Technology"];
+
+const stats = [
+  { value: "150+", label: "Projects Delivered" },
+  { value: "50+",  label: "Happy Clients" },
+  { value: "8+",   label: "Years Active" },
+  { value: "99%",  label: "Satisfaction" },
+];
 
 export function HeroSection() {
-  const [currentWord, setCurrentWord] = useState(0);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [wordIndex, setWordIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const smoothX = useSpring(mouseX, { stiffness: 50, damping: 20 });
-  const smoothY = useSpring(mouseY, { stiffness: 50, damping: 20 });
-  const rotateX = useTransform(smoothY, [-300, 300], [5, -5]);
-  const rotateY = useTransform(smoothX, [-300, 300], [-5, 5]);
+  const smoothX = useSpring(mouseX, { stiffness: 40, damping: 25 });
+  const smoothY = useSpring(mouseY, { stiffness: 40, damping: 25 });
+  const rotateX = useTransform(smoothY, [-400, 400], [4, -4]);
+  const rotateY = useTransform(smoothX, [-400, 400], [-4, 4]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentWord((prev) => (prev + 1) % words.length);
-    }, 2500);
-    return () => clearInterval(interval);
+    const id = setInterval(() => setWordIndex(i => (i + 1) % words.length), 2800);
+    return () => clearInterval(id);
   }, []);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const onMouseMove = (e: React.MouseEvent) => {
     const rect = containerRef.current?.getBoundingClientRect();
     if (!rect) return;
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    mouseX.set(x);
-    mouseY.set(y);
+    mouseX.set(e.clientX - rect.left - rect.width / 2);
+    mouseY.set(e.clientY - rect.top - rect.height / 2);
   };
-
-  const stats = [
-    { value: "150+", label: "Projects Delivered" },
-    { value: "50+", label: "Global Clients" },
-    { value: "8+", label: "Years Experience" },
-    { value: "99%", label: "Client Satisfaction" },
-  ];
 
   return (
     <section
       ref={containerRef}
-      onMouseMove={handleMouseMove}
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#0A0A0A] pt-20"
+      onMouseMove={onMouseMove}
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#0A0A0A] pt-16 md:pt-20"
     >
-      {/* Background layers */}
-      <div className="absolute inset-0 grid-pattern" />
-      <div className="absolute inset-0 yellow-glow-bg" />
+      {/* Layers */}
+      <div className="absolute inset-0 grid-pattern pointer-events-none" />
+      <div className="absolute inset-0 glow-center pointer-events-none" />
 
-      {/* Geometric shapes */}
+      {/* Orbiting ring */}
       <motion.div
         style={{ rotateX, rotateY }}
-        className="absolute top-1/4 right-1/4 w-64 h-64 opacity-10 pointer-events-none"
+        className="absolute inset-0 flex items-center justify-center pointer-events-none"
       >
-        <div className="w-full h-full border-2 border-[#FFD400] rotate-45 rounded-3xl" />
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
+          className="w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] lg:w-[900px] lg:h-[900px] rounded-full border border-white/[0.04]"
+        />
       </motion.div>
       <motion.div
-        animate={{ rotate: 360 }}
-        transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-        className="absolute bottom-1/4 left-1/4 w-48 h-48 opacity-5 pointer-events-none"
-      >
-        <div className="w-full h-full border border-white rounded-full" />
-        <div className="absolute inset-4 border border-[#FFD400] rounded-full" />
-        <div className="absolute inset-8 border border-white/50 rounded-full" />
-      </motion.div>
+        animate={{ rotate: -360 }}
+        transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+        className="absolute w-[300px] h-[300px] sm:w-[480px] sm:h-[480px] lg:w-[620px] lg:h-[620px] rounded-full border border-[#FFD400]/[0.05] pointer-events-none"
+      />
 
-      {/* Floating particles */}
-      {[...Array(6)].map((_, i) => (
+      {/* Floating dots */}
+      {[
+        { x: "12%", y: "22%", d: 0 },
+        { x: "85%", y: "18%", d: 0.6 },
+        { x: "75%", y: "72%", d: 1.2 },
+        { x: "18%", y: "68%", d: 1.8 },
+        { x: "50%", y: "15%", d: 2.4 },
+        { x: "55%", y: "80%", d: 3.0 },
+      ].map((p, i) => (
         <motion.div
           key={i}
-          className="absolute w-1 h-1 bg-[#FFD400] rounded-full opacity-40"
-          style={{
-            left: `${15 + i * 15}%`,
-            top: `${20 + (i % 3) * 25}%`,
-          }}
-          animate={{
-            y: [0, -30, 0],
-            opacity: [0.2, 0.6, 0.2],
-          }}
-          transition={{
-            duration: 3 + i * 0.5,
-            repeat: Infinity,
-            delay: i * 0.4,
-          }}
+          className="absolute w-1 h-1 rounded-full bg-[#FFD400]"
+          style={{ left: p.x, top: p.y }}
+          animate={{ opacity: [0.15, 0.55, 0.15], y: [0, -18, 0] }}
+          transition={{ duration: 4, repeat: Infinity, delay: p.d }}
         />
       ))}
 
-      {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Badge */}
+      {/* ── CONTENT ── */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
+
+        {/* Eyebrow badge */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="mb-8"
+          transition={{ duration: 0.6 }}
+          className="inline-flex items-center gap-2 mb-6 sm:mb-8"
         >
-          <Badge variant="accent" className="text-xs">
-            ✦ Mogadishu, Somalia — Est. 2018
-          </Badge>
+          <span className="badge-accent">
+            <Zap size={10} className="fill-[#FFD400]" />
+            Next-Generation Creative Agency · Mogadishu
+          </span>
         </motion.div>
 
-        {/* Headline */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
+        {/* Main headline */}
+        <motion.h1
+          initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
-          className="mb-4"
+          transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          className="text-[clamp(2.4rem,8vw,7rem)] font-black tracking-tight leading-[0.88] text-white mb-5 sm:mb-6"
         >
-          <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight leading-[0.9] text-white">
-            FROM VISION
-            <br />
-            <span className="text-[#FFD400]">TO REALITY</span>
-          </h1>
-        </motion.div>
+          FROM VISION
+          <br />
+          <span className="text-[#FFD400]">TO REALITY</span>
+        </motion.h1>
 
-        {/* Dynamic word */}
+        {/* Animated sub-line */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mb-8 h-12 flex items-center justify-center"
+          transition={{ duration: 0.6, delay: 0.35 }}
+          className="flex items-center justify-center gap-2 mb-5 sm:mb-6 h-8 sm:h-10"
         >
-          <p className="text-xl sm:text-2xl text-white/50 font-light tracking-wide">
-            Where{" "}
+          <span className="text-white/45 text-base sm:text-xl font-light">Where</span>
+          <AnimatePresence mode="wait">
             <motion.span
-              key={currentWord}
-              initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+              key={wordIndex}
+              initial={{ opacity: 0, y: 10, filter: "blur(6px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.4 }}
-              className="text-white font-semibold"
+              exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
+              transition={{ duration: 0.45 }}
+              className="text-white text-base sm:text-xl font-semibold"
             >
-              {words[currentWord]}
+              {words[wordIndex]}
             </motion.span>
-            {" "}Meets Purpose
-          </p>
+          </AnimatePresence>
+          <span className="text-white/45 text-base sm:text-xl font-light">Meets Purpose</span>
         </motion.div>
 
         {/* Description */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-white/50 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed mb-12"
+          transition={{ duration: 0.6, delay: 0.45 }}
+          className="text-white/50 text-sm sm:text-base lg:text-lg max-w-xl sm:max-w-2xl mx-auto leading-relaxed mb-9 sm:mb-12 px-2"
         >
           A next-generation creative and media company transforming ideas into measurable, real-world impact through purposeful creativity and strategic execution.
         </motion.p>
 
-        {/* CTAs */}
+        {/* CTA Buttons */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20"
+          transition={{ duration: 0.6, delay: 0.55 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-16 sm:mb-20"
         >
-          <Link href="/contact">
-            <Button size="lg" className="group gap-3 w-full sm:w-auto">
+          <Link href="/contact" className="w-full sm:w-auto">
+            <Button size="lg" className="w-full sm:w-auto group gap-2.5">
               Start Your Project
-              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              <ArrowRight size={17} className="group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
-          <Link href="/portfolio">
-            <Button variant="secondary" size="lg" className="group gap-3 w-full sm:w-auto">
-              <span className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-[#FFD400]/20 transition-colors">
-                <Play size={12} className="ml-0.5" />
+          <Link href="/portfolio" className="w-full sm:w-auto">
+            <Button variant="secondary" size="lg" className="w-full sm:w-auto gap-3">
+              <span className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
+                <Play size={10} className="ml-0.5" />
               </span>
               View Our Work
             </Button>
@@ -178,44 +169,46 @@ export function HeroSection() {
 
         {/* Stats */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto"
+          transition={{ duration: 0.8, delay: 0.7 }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 max-w-2xl md:max-w-3xl mx-auto"
         >
-          {stats.map((stat, i) => (
+          {stats.map((s, i) => (
             <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
+              key={s.label}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9 + i * 0.1 }}
-              className="text-center"
+              transition={{ delay: 0.8 + i * 0.08 }}
+              className="flex flex-col items-center"
             >
-              <div className="text-3xl sm:text-4xl font-black text-[#FFD400] mb-1">{stat.value}</div>
-              <div className="text-white/40 text-xs tracking-wider uppercase">{stat.label}</div>
+              <div className="text-[clamp(1.75rem,5vw,2.75rem)] font-black text-[#FFD400] leading-none mb-1">
+                {s.value}
+              </div>
+              <div className="text-white/40 text-[10px] sm:text-xs tracking-wider uppercase text-center">
+                {s.label}
+              </div>
             </motion.div>
           ))}
         </motion.div>
       </div>
 
-      {/* Bottom gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0A0A0A] to-transparent pointer-events-none" />
+      {/* Bottom vignette */}
+      <div className="absolute bottom-0 inset-x-0 h-28 bg-gradient-to-t from-[#0A0A0A] to-transparent pointer-events-none" />
 
-      {/* Scroll indicator */}
+      {/* Scroll cue */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        transition={{ delay: 1.6 }}
+        className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
+        <span className="text-white/25 text-[10px] tracking-[0.2em] uppercase">Scroll</span>
         <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="flex flex-col items-center gap-2"
-        >
-          <span className="text-white/30 text-xs tracking-widest uppercase">Scroll</span>
-          <div className="w-px h-8 bg-gradient-to-b from-white/20 to-transparent" />
-        </motion.div>
+          animate={{ scaleY: [1, 0.4, 1], opacity: [0.4, 1, 0.4] }}
+          transition={{ duration: 1.8, repeat: Infinity }}
+          className="w-px h-8 bg-gradient-to-b from-[#FFD400]/60 to-transparent origin-top"
+        />
       </motion.div>
     </section>
   );
