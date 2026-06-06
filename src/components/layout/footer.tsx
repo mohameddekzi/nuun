@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, ArrowUpRight, Globe } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
 const footerLinks = {
@@ -21,6 +20,13 @@ const footerLinks = {
     { href: "/studio", label: "NUUN Studio" },
   ],
 };
+
+const socials = [
+  { label: "IG", href: "#" },
+  { label: "TW", href: "#" },
+  { label: "LI", href: "#" },
+  { label: "FB", href: "#" },
+];
 
 export function Footer() {
   const [email, setEmail] = useState("");
@@ -41,109 +47,110 @@ export function Footer() {
 
   return (
     <footer className="relative bg-[#0A0A0A] border-t border-white/[0.06] overflow-hidden">
-      {/* Background */}
       <div className="absolute inset-0 dot-pattern opacity-30 pointer-events-none" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] bg-[#FFD400]/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[160px] bg-[#FFD400]/[0.04] rounded-full blur-3xl pointer-events-none" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 sm:pt-16 lg:pt-20 pb-8">
+
         {/* Main grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-          {/* Brand */}
-          <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-3 mb-6 group">
-              <div className="relative w-10 h-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-12 sm:mb-14 lg:mb-16">
+
+          {/* Brand col */}
+          <div className="sm:col-span-2">
+            <Link href="/" className="inline-flex items-center gap-2.5 mb-5 group">
+              <div className="relative w-9 h-9">
                 <div className="absolute inset-0 bg-[#FFD400] rounded-lg rotate-45 group-hover:rotate-[135deg] transition-transform duration-500" />
-                <div className="absolute inset-1 bg-[#0A0A0A] rounded-sm rotate-45" />
-                <span className="absolute inset-0 flex items-center justify-center text-[#FFD400] font-black text-sm z-10">N</span>
+                <div className="absolute inset-[3px] bg-[#0A0A0A] rounded-sm rotate-45" />
+                <span className="absolute inset-0 flex items-center justify-center text-[#FFD400] font-black text-xs z-10">N</span>
               </div>
-              <span className="text-white font-bold text-xl tracking-tight">
+              <span className="text-white font-bold text-base sm:text-lg tracking-tight">
                 NUUN <span className="text-[#FFD400]">MEDIA</span>
               </span>
             </Link>
-            <p className="text-white/50 text-sm leading-relaxed mb-8 max-w-sm">
+            <p className="text-white/50 text-sm leading-relaxed mb-7 max-w-sm">
               A next-generation creative and media company operating at the intersection of creativity, technology, and digital transformation.
             </p>
 
             {/* Newsletter */}
             <div>
-              <p className="text-white/70 text-sm font-medium mb-3">Stay updated</p>
+              <p className="text-white/70 text-xs font-semibold tracking-wider uppercase mb-3">Stay Updated</p>
               {subscribed ? (
                 <p className="text-[#FFD400] text-sm">Thanks for subscribing!</p>
               ) : (
-                <form onSubmit={handleSubscribe} className="flex gap-2">
+                <form onSubmit={handleSubscribe} className="flex gap-2 max-w-xs">
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
-                    className="flex-1 h-10 px-3 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#FFD400]/50"
+                    className="flex-1 min-w-0 h-9 px-3 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#FFD400]/50 transition-colors"
                   />
-                  <Button size="sm" type="submit" className="text-xs px-4">
-                    Subscribe
+                  <Button size="sm" type="submit" className="shrink-0 text-xs px-4">
+                    Join
                   </Button>
                 </form>
               )}
             </div>
           </div>
 
-          {/* Company links */}
+          {/* Company */}
           <div>
-            <h4 className="text-white font-semibold text-sm mb-6 tracking-wider uppercase">Company</h4>
+            <h4 className="text-white/70 font-semibold text-xs mb-5 tracking-widest uppercase">Company</h4>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-white/50 hover:text-white text-sm transition-colors duration-200 flex items-center gap-1.5 group">
+                  <Link
+                    href={link.href}
+                    className="text-white/50 hover:text-white text-sm transition-colors duration-200 flex items-center gap-1.5 group w-fit"
+                  >
                     {link.label}
-                    <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <ArrowUpRight size={11} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Resources links */}
+          {/* Resources + Contact */}
           <div>
-            <h4 className="text-white font-semibold text-sm mb-6 tracking-wider uppercase">Resources</h4>
-            <ul className="space-y-3 mb-8">
+            <h4 className="text-white/70 font-semibold text-xs mb-5 tracking-widest uppercase">Resources</h4>
+            <ul className="space-y-3 mb-7">
               {footerLinks.resources.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-white/50 hover:text-white text-sm transition-colors duration-200 flex items-center gap-1.5 group">
+                  <Link
+                    href={link.href}
+                    className="text-white/50 hover:text-white text-sm transition-colors duration-200 flex items-center gap-1.5 group w-fit"
+                  >
                     {link.label}
-                    <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <ArrowUpRight size={11} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                   </Link>
                 </li>
               ))}
             </ul>
 
-            {/* Contact */}
             <div className="space-y-2">
               <a href="mailto:info@nuun.so" className="flex items-center gap-2 text-white/50 hover:text-[#FFD400] text-xs transition-colors">
-                <Mail size={12} /> info@nuun.so
+                <Mail size={11} /> info@nuun.so
               </a>
               <a href="tel:+252614272760" className="flex items-center gap-2 text-white/50 hover:text-[#FFD400] text-xs transition-colors">
-                <Phone size={12} /> +252 61 4272760
+                <Phone size={11} /> +252 61 4272760
               </a>
               <p className="flex items-center gap-2 text-white/50 text-xs">
-                <MapPin size={12} /> KM5 Zoobe, Mogadishu
+                <MapPin size={11} /> KM5 Zoobe, Mogadishu
               </p>
             </div>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-white/[0.06] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-white/30 text-xs">
+        <div className="border-t border-white/[0.06] pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-white/30 text-xs order-2 sm:order-1">
             © 2026 Nuun Media. All rights reserved.
           </p>
-          <div className="flex items-center gap-3">
-            {[
-              { label: "IG", href: "#" },
-              { label: "TW", href: "#" },
-              { label: "LI", href: "#" },
-              { label: "FB", href: "#" },
-            ].map(({ label, href }, i) => (
+          <div className="flex items-center gap-2 order-1 sm:order-2">
+            {socials.map(({ label, href }) => (
               <a
-                key={i}
+                key={label}
                 href={href}
                 className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 text-white/50 hover:text-[#FFD400] hover:bg-[#FFD400]/10 hover:border-[#FFD400]/20 transition-all duration-200 text-xs font-bold"
               >

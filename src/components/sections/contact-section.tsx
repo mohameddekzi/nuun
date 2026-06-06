@@ -60,26 +60,27 @@ export function ContactSection() {
   };
 
   return (
-    <section className="py-20 bg-[#0A0A0A]">
+    <section className="section-padding bg-[#0A0A0A]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 sm:gap-10 lg:gap-12">
+
           {/* Info */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-6 sm:space-y-8">
             <div>
-              <h2 className="text-3xl font-black text-white mb-4">Let&apos;s Talk</h2>
+              <h2 className="text-[clamp(1.75rem,4vw,3rem)] font-black text-white mb-3 sm:mb-4">Let&apos;s Talk</h2>
               <p className="text-white/50 text-sm leading-relaxed">
                 Whether you have a project in mind or just want to explore possibilities, we&apos;re here to help you achieve your goals.
               </p>
             </div>
 
-            <div className="space-y-5">
+            <div className="space-y-4 sm:space-y-5">
               {contactInfo.map(({ icon: Icon, label, value, href }) => (
-                <div key={label} className="flex items-start gap-4">
+                <div key={label} className="flex items-start gap-3 sm:gap-4">
                   <div className="w-10 h-10 rounded-xl bg-[#FFD400]/10 border border-[#FFD400]/20 flex items-center justify-center flex-shrink-0">
-                    <Icon size={16} className="text-[#FFD400]" />
+                    <Icon size={15} className="text-[#FFD400]" />
                   </div>
                   <div>
-                    <p className="text-white/40 text-xs uppercase tracking-wider mb-0.5">{label}</p>
+                    <p className="text-white/40 text-[10px] sm:text-xs uppercase tracking-wider mb-0.5">{label}</p>
                     {href ? (
                       <a href={href} className="text-white text-sm hover:text-[#FFD400] transition-colors">{value}</a>
                     ) : (
@@ -91,9 +92,9 @@ export function ContactSection() {
             </div>
 
             {/* Office hours */}
-            <div className="p-6 bg-white/[0.03] border border-white/[0.08] rounded-2xl">
-              <p className="text-[#FFD400] text-xs font-bold tracking-widest uppercase mb-4">Office Hours</p>
-              <div className="space-y-2 text-sm">
+            <div className="p-5 sm:p-6 card">
+              <p className="text-[#FFD400] text-[10px] sm:text-xs font-bold tracking-widest uppercase mb-4">Office Hours</p>
+              <div className="space-y-2 text-xs sm:text-sm">
                 <div className="flex justify-between text-white/60">
                   <span>Monday — Friday</span>
                   <span>8:00 AM — 6:00 PM</span>
@@ -115,36 +116,35 @@ export function ContactSection() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white/[0.03] border border-white/[0.08] rounded-3xl p-8"
+              className="card p-6 sm:p-8 rounded-3xl"
             >
               {sent ? (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 rounded-full bg-[#FFD400]/10 border border-[#FFD400]/20 flex items-center justify-center mx-auto mb-6">
-                    <CheckCircle size={32} className="text-[#FFD400]" />
+                <div className="text-center py-10 sm:py-12">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#FFD400]/10 border border-[#FFD400]/20 flex items-center justify-center mx-auto mb-5 sm:mb-6">
+                    <CheckCircle size={28} className="text-[#FFD400]" />
                   </div>
-                  <h3 className="text-white text-2xl font-bold mb-3">Message Sent!</h3>
+                  <h3 className="text-white text-xl sm:text-2xl font-bold mb-3">Message Sent!</h3>
                   <p className="text-white/50 text-sm">We&apos;ll get back to you within 24 hours.</p>
-                  <button onClick={() => setSent(false)} className="mt-6 text-[#FFD400] text-sm hover:underline">
+                  <button onClick={() => setSent(false)} className="mt-5 sm:mt-6 text-[#FFD400] text-sm hover:underline">
                     Send another message
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                     <Input label="Full Name *" placeholder="Ahmed Hassan" error={errors.name?.message} {...register("name")} />
                     <Input label="Email *" type="email" placeholder="hello@company.com" error={errors.email?.message} {...register("email")} />
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                     <Input label="Phone" type="tel" placeholder="+252 ..." {...register("phone")} />
                     <Input label="Company" placeholder="Your Company" {...register("company")} />
                   </div>
 
-                  {/* Service select */}
                   <div className="flex flex-col gap-1.5">
                     <label className="text-sm font-medium text-white/70">Service of Interest</label>
                     <select
                       {...register("service")}
-                      className="h-12 px-4 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-[#FFD400]/50 transition-all text-sm"
+                      className="h-11 sm:h-12 px-4 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-[#FFD400]/50 transition-all text-sm"
                     >
                       <option value="" className="bg-[#0A0A0A]">Select a service...</option>
                       {services.map((s) => (
@@ -164,7 +164,7 @@ export function ContactSection() {
                   />
 
                   <Button type="submit" loading={isSubmitting} size="lg" className="w-full gap-3">
-                    <Send size={16} />
+                    <Send size={15} />
                     Send Message
                   </Button>
                 </form>
