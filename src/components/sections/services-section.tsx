@@ -42,18 +42,18 @@ export function ServicesSection({ services }: ServicesSectionProps) {
             <br />
             <span className="text-[#FFD400]">Solutions</span>
           </h2>
-          <p className="text-white/50 text-sm sm:text-base lg:text-lg max-w-xl sm:max-w-2xl mx-auto leading-relaxed">
+          <p className="text-white/50 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto leading-relaxed">
             Comprehensive media and creative services designed to meet the highest corporate standards — from brand identity to full digital campaigns.
           </p>
         </motion.div>
 
-        {/* Grid */}
+        {/* Grid — flex-wrap ensures last row is always centered */}
         <motion.div
           variants={list}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-80px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-7"
+          className="flex flex-wrap justify-center gap-5 sm:gap-6 lg:gap-7"
         >
           {services.map((service, i) => {
             const Icon = iconMap[service.icon || "Star"] || Star;
@@ -61,22 +61,22 @@ export function ServicesSection({ services }: ServicesSectionProps) {
               <motion.div
                 key={service.id}
                 variants={item}
-                className="group relative card card-lift p-6 sm:p-7 lg:p-8 xl:p-9 overflow-hidden cursor-pointer"
+                className="group relative card card-lift p-6 sm:p-7 lg:p-8 overflow-hidden cursor-pointer w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-20px)]"
               >
                 {/* Hover gradient */}
                 <div className="absolute inset-0 bg-gradient-to-br from-[#FFD400]/0 group-hover:from-[#FFD400]/[0.04] to-transparent transition-all duration-500 rounded-[20px]" />
 
+                {/* Number watermark */}
+                <div className="absolute top-4 right-5 text-[3.5rem] font-black text-white/[0.03] select-none leading-none">
+                  {String(i + 1).padStart(2, "0")}
+                </div>
+
                 {/* Icon */}
-                <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#FFD400]/10 border border-[#FFD400]/20 flex items-center justify-center mb-5 sm:mb-6 group-hover:bg-[#FFD400] group-hover:scale-105 transition-all duration-300">
+                <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#FFD400]/10 border border-[#FFD400]/20 flex items-center justify-center mb-5 group-hover:bg-[#FFD400] group-hover:scale-105 transition-all duration-300">
                   <Icon
                     size={20}
                     className="text-[#FFD400] group-hover:text-[#0A0A0A] transition-colors duration-300"
                   />
-                </div>
-
-                {/* Number watermark */}
-                <div className="absolute top-5 right-5 text-[3.5rem] sm:text-[4rem] font-black text-white/[0.03] select-none leading-none">
-                  {String(i + 1).padStart(2, "0")}
                 </div>
 
                 <h3 className="relative text-white font-bold text-base sm:text-lg mb-2.5 group-hover:text-[#FFD400] transition-colors">
@@ -86,10 +86,10 @@ export function ServicesSection({ services }: ServicesSectionProps) {
                   {service.short_description}
                 </p>
 
-                <div className="relative flex items-center gap-1.5 text-[#FFD400]/60 text-sm font-medium group-hover:text-[#FFD400] transition-colors">
+                <Link href={`/services#${service.slug || service.id}`} className="relative flex items-center gap-1.5 text-[#FFD400]/60 text-sm font-medium group-hover:text-[#FFD400] transition-colors w-fit">
                   Learn More
                   <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
-                </div>
+                </Link>
               </motion.div>
             );
           })}
@@ -101,10 +101,10 @@ export function ServicesSection({ services }: ServicesSectionProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="text-center mt-10 sm:mt-12"
+          className="text-center mt-10 sm:mt-14"
         >
           <Link href="/services">
-            <button className="inline-flex items-center gap-2 text-[#FFD400] text-sm font-medium border border-[#FFD400]/25 hover:border-[#FFD400]/60 hover:bg-[#FFD400]/5 px-6 py-2.5 rounded-full transition-all duration-300">
+            <button className="inline-flex items-center gap-2 text-[#FFD400] text-sm font-medium border border-[#FFD400]/25 hover:border-[#FFD400]/60 hover:bg-[#FFD400]/5 px-7 py-3 rounded-full transition-all duration-300">
               View All Services <ArrowRight size={14} />
             </button>
           </Link>
