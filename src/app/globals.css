@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* ────────────────────────────────
+   THEME VARIABLES
+──────────────────────────────── */
 :root {
   --bg: #0A0A0A;
   --fg: #FFFFFF;
@@ -10,6 +13,37 @@
   --border-hover: rgba(255, 255, 255, 0.14);
   --surface: rgba(255, 255, 255, 0.03);
   --surface-hover: rgba(255, 255, 255, 0.06);
+
+  --header-scrolled-bg: rgba(10, 10, 10, 0.92);
+  --header-scrolled-border: rgba(255, 255, 255, 0.07);
+  --header-scrolled-shadow: 0 2px 24px rgba(0, 0, 0, 0.5);
+
+  --mobile-drawer-bg: #0F0F0F;
+  --mobile-drawer-border: rgba(255, 255, 255, 0.07);
+  --mobile-link-inactive: rgba(255, 255, 255, 0.55);
+  --mobile-link-inactive-hover-bg: rgba(255, 255, 255, 0.06);
+}
+
+/* Light theme */
+html.light {
+  --bg: #F5F5F0;
+  --fg: #0D0D0D;
+  --accent: #C49A00;
+  --accent-dim: rgba(196, 154, 0, 0.10);
+  --accent-glow: rgba(196, 154, 0, 0.18);
+  --border: rgba(0, 0, 0, 0.08);
+  --border-hover: rgba(0, 0, 0, 0.14);
+  --surface: rgba(0, 0, 0, 0.04);
+  --surface-hover: rgba(0, 0, 0, 0.07);
+
+  --header-scrolled-bg: rgba(246, 245, 241, 0.95);
+  --header-scrolled-border: rgba(0, 0, 0, 0.08);
+  --header-scrolled-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+
+  --mobile-drawer-bg: #F0EFE8;
+  --mobile-drawer-border: rgba(0, 0, 0, 0.08);
+  --mobile-link-inactive: rgba(0, 0, 0, 0.5);
+  --mobile-link-inactive-hover-bg: rgba(0, 0, 0, 0.05);
 }
 
 @theme inline {
@@ -34,6 +68,7 @@ body {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   overflow-x: hidden;
   min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Scrollbar */
@@ -43,6 +78,74 @@ body {
 
 /* Selection */
 ::selection { background: var(--accent); color: #0A0A0A; }
+
+/* ────────────────────────────────
+   HEADER THEME UTILITY
+──────────────────────────────── */
+.header-scrolled {
+  background: var(--header-scrolled-bg);
+  border-bottom: 1px solid var(--header-scrolled-border);
+  box-shadow: var(--header-scrolled-shadow);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* ────────────────────────────────
+   MOBILE DRAWER THEME
+──────────────────────────────── */
+.mobile-drawer {
+  background: var(--mobile-drawer-bg);
+  border-left: 1px solid var(--mobile-drawer-border);
+}
+.mobile-nav-link-inactive {
+  color: var(--mobile-link-inactive);
+}
+.mobile-nav-link-inactive:hover {
+  color: var(--fg);
+  background: var(--mobile-link-inactive-hover-bg);
+}
+
+/* ────────────────────────────────
+   LIGHT MODE OVERRIDES (public site)
+──────────────────────────────── */
+html.light footer:not(.admin-shell *) {
+  background-color: var(--bg) !important;
+  border-top-color: var(--border) !important;
+}
+html.light .grid-pattern {
+  background-image:
+    linear-gradient(rgba(0,0,0,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.025) 1px, transparent 1px);
+}
+html.light .dot-pattern {
+  background-image: radial-gradient(rgba(0,0,0,0.06) 1px, transparent 1px);
+}
+html.light .animate-shimmer {
+  background: linear-gradient(90deg, #e8e7e2 25%, #d0cfc9 50%, #e8e7e2 75%);
+  background-size: 200% 100%;
+}
+html.light .glow-center {
+  background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(196,154,0,0.05) 0%, transparent 70%);
+}
+html.light .glow-top {
+  background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(196,154,0,0.06) 0%, transparent 70%);
+}
+
+/* ────────────────────────────────
+   ADMIN: always dark
+──────────────────────────────── */
+.admin-shell {
+  --bg: #0A0A0A;
+  --fg: #FFFFFF;
+  --accent: #FFD400;
+  --accent-dim: rgba(255, 212, 0, 0.12);
+  --border: rgba(255, 255, 255, 0.07);
+  --surface: rgba(255, 255, 255, 0.03);
+  --surface-hover: rgba(255, 255, 255, 0.06);
+  background: #0A0A0A !important;
+  color: #FFFFFF !important;
+  color-scheme: dark;
+}
 
 /* ────────────────────────────────
    PATTERNS
@@ -124,7 +227,7 @@ body {
    GRADIENT TEXT
 ──────────────────────────────── */
 .text-gradient {
-  background: linear-gradient(135deg, #FFD400 0%, #FFF0A0 50%, #FFD400 100%);
+  background: linear-gradient(135deg, var(--accent) 0%, #FFF0A0 50%, var(--accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -145,7 +248,7 @@ body {
 }
 .card-lift:hover {
   transform: translateY(-4px);
-  box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.25);
 }
 
 /* ────────────────────────────────
@@ -165,9 +268,9 @@ body {
   gap: 6px;
   padding: 6px 14px;
   border-radius: 100px;
-  background: rgba(255,212,0,0.1);
+  background: var(--accent-dim);
   border: 1px solid rgba(255,212,0,0.2);
-  color: #FFD400;
+  color: var(--accent);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.1em;

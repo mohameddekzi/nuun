@@ -2,16 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Briefcase, FolderOpen, FileText,
   Star, DollarSign, HelpCircle, MessageSquare,
   Image, Settings, Users, LogOut, ChevronLeft, Menu,
-  Globe
+  Globe, X
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { cn } from "@/lib/utils/cn";
 
 const navItems = [
@@ -31,9 +30,11 @@ const navItems = [
 interface SidebarProps {
   collapsed: boolean;
   onToggle: () => void;
+  mobileOpen?: boolean;
+  onMobileClose?: () => void;
 }
 
-export function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
+function SidebarContent({ collapsed, onToggle, onClose }: { collapsed: boolean; onToggle: () => void; onClose?: () => void }) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -44,15 +45,10 @@ export function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
   };
 
   return (
-    <motion.aside
-      initial={false}
-      animate={{ width: collapsed ? 64 : 256 }}
-      transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-      className="admin-sidebar flex flex-col h-screen sticky top-0 overflow-hidden"
-    >
+    <div className="admin-sidebar flex flex-col h-full overflow-hidden">
       {/* Header */}
-      <div className={cn("flex items-center h-16 px-4 border-b border-white/[0.06]", collapsed ? "justify-center" : "justify-between")}>
-        {!collapsed && (
+      <div className={cn("flex items-center h-16 px-4 border-b border-white/[0.06]", collapsed && !onClose ? "justify-center" : "justify-between")}>
+        {(!collapsed || onClose) && (
           <div className="flex items-center gap-2.5">
             <div className="relative w-7 h-7">
               <div className="absolute inset-0 bg-[#FFD400] rounded-lg rotate-45" />
@@ -62,12 +58,21 @@ export function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
             <span className="text-white font-bold text-sm tracking-tight">NUUN Studio</span>
           </div>
         )}
-        <button
-          onClick={onToggle}
-          className="w-7 h-7 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-        >
-          {collapsed ? <Menu size={14} /> : <ChevronLeft size={14} />}
-        </button>
+        {onClose ? (
+          <button
+            onClick={onClose}
+            className="w-7 h-7 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+          >
+            <X size={14} />
+          </button>
+        ) : (
+          <button
+            onClick={onToggle}
+            className="w-7 h-7 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+          >
+            {collapsed ? <Menu size={14} /> : <ChevronLeft size={14} />}
+          </button>
+        )}
       </div>
 
       {/* Navigation */}
@@ -78,7 +83,8 @@ export function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
             <Link
               key={href}
               href={href}
-              title={collapsed ? label : undefined}
+              onClick={onClose}
+              title={collapsed && !onClose ? label : undefined}
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group",
                 active
@@ -87,7 +93,7 @@ export function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
               )}
             >
               <Icon size={16} className="flex-shrink-0" />
-              {!collapsed && <span className="truncate">{label}</span>}
+              {(!collapsed || onClose) && <span className="truncate">{label}</span>}
             </Link>
           );
         })}
@@ -101,16 +107,61 @@ export function AdminSidebar({ collapsed, onToggle }: SidebarProps) {
           className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/40 hover:text-white hover:bg-white/5 transition-all"
         >
           <Globe size={16} className="flex-shrink-0" />
-          {!collapsed && <span>View Site</span>}
+          {(!collapsed || onClose) && <span>View Site</span>}
         </Link>
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/40 hover:text-red-400 hover:bg-red-500/5 transition-all"
         >
           <LogOut size={16} className="flex-shrink-0" />
-          {!collapsed && <span>Sign Out</span>}
+          {(!collapsed || onClose) && <span>Sign Out</span>}
         </button>
       </div>
-    </motion.aside>
+    </div>
+  );
+}
+
+export function AdminSidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: SidebarProps) {
+  return (
+    <>
+      {/* Desktop sidebar — hidden on mobile */}
+      <motion.aside
+        initial={false}
+        animate={{ width: collapsed ? 64 : 256 }}
+        transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+        className="hidden lg:block flex-shrink-0 h-screen sticky top-0 overflow-hidden"
+      >
+        <SidebarContent collapsed={collapsed} onToggle={onToggle} />
+      </motion.aside>
+
+      {/* Mobile overlay sidebar */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            className="fixed inset-0 z-50 lg:hidden"
+          >
+            {/* Backdrop */}
+            <div
+              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+              onClick={onMobileClose}
+            />
+            {/* Drawer */}
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute left-0 top-0 h-full w-72"
+            >
+              <SidebarContent collapsed={false} onToggle={onToggle} onClose={onMobileClose} />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

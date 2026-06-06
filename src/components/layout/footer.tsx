@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,7 +30,11 @@ const socials = [
   { label: "FB", href: "#" },
 ];
 
-export function Footer() {
+interface FooterProps {
+  logoUrl?: string | null;
+}
+
+export function Footer({ logoUrl }: FooterProps) {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
 
@@ -47,9 +52,9 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative bg-[#0A0A0A] border-t border-white/[0.06] overflow-hidden">
+    <footer className="relative overflow-hidden" style={{ background: "var(--bg)", borderTop: "1px solid var(--border)" }}>
       <div className="absolute inset-0 dot-pattern opacity-30 pointer-events-none" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[160px] bg-[#FFD400]/[0.04] rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[160px] rounded-full blur-3xl pointer-events-none" style={{ background: "var(--accent-glow)" }} />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 sm:pt-16 lg:pt-20 pb-8">
 
@@ -59,21 +64,24 @@ export function Footer() {
           {/* Brand col */}
           <div className="sm:col-span-2 text-center sm:text-left flex flex-col items-center sm:items-start">
             <Link href="/" className="inline-flex items-center gap-2.5 mb-5 group">
-              <NuunLogoMark
-                height={30}
-                className="group-hover:scale-105 transition-transform duration-300"
-              />
-              <span className="text-white font-bold text-base sm:text-lg tracking-tight">
-                NUUN <span className="text-[#FFD400]">MEDIA</span>
-              </span>
+              {logoUrl ? (
+                <Image src={logoUrl} alt="Nuun Media" width={120} height={32} className="h-8 w-auto object-contain group-hover:scale-105 transition-transform duration-300" />
+              ) : (
+                <>
+                  <NuunLogoMark height={30} className="group-hover:scale-105 transition-transform duration-300" />
+                  <span className="font-bold text-base sm:text-lg tracking-tight" style={{ color: "var(--fg)" }}>
+                    NUUN <span className="text-[#FFD400]">MEDIA</span>
+                  </span>
+                </>
+              )}
             </Link>
-            <p className="text-white/50 text-sm leading-relaxed mb-7 max-w-sm">
+            <p className="text-sm leading-relaxed mb-7 max-w-sm" style={{ color: "color-mix(in srgb, var(--fg) 50%, transparent)" }}>
               A next-generation creative and media company operating at the intersection of creativity, technology, and digital transformation.
             </p>
 
             {/* Newsletter */}
             <div>
-              <p className="text-white/70 text-xs font-semibold tracking-wider uppercase mb-3">Stay Updated</p>
+              <p className="text-xs font-semibold tracking-wider uppercase mb-3" style={{ color: "color-mix(in srgb, var(--fg) 70%, transparent)" }}>Stay Updated</p>
               {subscribed ? (
                 <p className="text-[#FFD400] text-sm">Thanks for subscribing!</p>
               ) : (
@@ -83,7 +91,12 @@ export function Footer() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
-                    className="flex-1 min-w-0 h-9 px-3 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#FFD400]/50 transition-colors"
+                    className="flex-1 min-w-0 h-9 px-3 rounded-lg text-sm focus:outline-none transition-colors"
+                    style={{
+                      background: "var(--surface)",
+                      border: "1px solid var(--border)",
+                      color: "var(--fg)",
+                    }}
                   />
                   <Button size="sm" type="submit" className="shrink-0 text-xs px-4">
                     Join
@@ -95,13 +108,14 @@ export function Footer() {
 
           {/* Company */}
           <div className="text-center sm:text-left flex flex-col items-center sm:items-start">
-            <h4 className="text-white/70 font-semibold text-xs mb-5 tracking-widest uppercase">Company</h4>
+            <h4 className="font-semibold text-xs mb-5 tracking-widest uppercase" style={{ color: "color-mix(in srgb, var(--fg) 70%, transparent)" }}>Company</h4>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-white/50 hover:text-white text-sm transition-colors duration-200 flex items-center gap-1.5 group w-fit"
+                    className="text-sm transition-colors duration-200 flex items-center gap-1.5 group w-fit hover:text-[#FFD400]"
+                    style={{ color: "color-mix(in srgb, var(--fg) 50%, transparent)" }}
                   >
                     {link.label}
                     <ArrowUpRight size={11} className="opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -113,13 +127,14 @@ export function Footer() {
 
           {/* Resources + Contact */}
           <div className="text-center sm:text-left flex flex-col items-center sm:items-start">
-            <h4 className="text-white/70 font-semibold text-xs mb-5 tracking-widest uppercase">Resources</h4>
+            <h4 className="font-semibold text-xs mb-5 tracking-widest uppercase" style={{ color: "color-mix(in srgb, var(--fg) 70%, transparent)" }}>Resources</h4>
             <ul className="space-y-3 mb-7">
               {footerLinks.resources.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-white/50 hover:text-white text-sm transition-colors duration-200 flex items-center gap-1.5 group w-fit"
+                    className="text-sm transition-colors duration-200 flex items-center gap-1.5 group w-fit hover:text-[#FFD400]"
+                    style={{ color: "color-mix(in srgb, var(--fg) 50%, transparent)" }}
                   >
                     {link.label}
                     <ArrowUpRight size={11} className="opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -129,13 +144,13 @@ export function Footer() {
             </ul>
 
             <div className="space-y-2">
-              <a href="mailto:info@nuun.so" className="flex items-center gap-2 text-white/50 hover:text-[#FFD400] text-xs transition-colors">
+              <a href="mailto:info@nuun.so" className="flex items-center gap-2 text-xs transition-colors hover:text-[#FFD400]" style={{ color: "color-mix(in srgb, var(--fg) 50%, transparent)" }}>
                 <Mail size={11} /> info@nuun.so
               </a>
-              <a href="tel:+252614272760" className="flex items-center gap-2 text-white/50 hover:text-[#FFD400] text-xs transition-colors">
+              <a href="tel:+252614272760" className="flex items-center gap-2 text-xs transition-colors hover:text-[#FFD400]" style={{ color: "color-mix(in srgb, var(--fg) 50%, transparent)" }}>
                 <Phone size={11} /> +252 61 4272760
               </a>
-              <p className="flex items-center gap-2 text-white/50 text-xs">
+              <p className="flex items-center gap-2 text-xs" style={{ color: "color-mix(in srgb, var(--fg) 50%, transparent)" }}>
                 <MapPin size={11} /> KM5 Zoobe, Mogadishu
               </p>
             </div>
@@ -143,8 +158,8 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-white/[0.06] pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-white/30 text-xs order-2 sm:order-1">
+        <div className="pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-4" style={{ borderTop: "1px solid var(--border)" }}>
+          <p className="text-xs order-2 sm:order-1" style={{ color: "color-mix(in srgb, var(--fg) 30%, transparent)" }}>
             © 2026 Nuun Media. All rights reserved.
           </p>
           <div className="flex items-center gap-2 order-1 sm:order-2">
@@ -152,7 +167,12 @@ export function Footer() {
               <a
                 key={label}
                 href={href}
-                className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 text-white/50 hover:text-[#FFD400] hover:bg-[#FFD400]/10 hover:border-[#FFD400]/20 transition-all duration-200 text-xs font-bold"
+                className="w-8 h-8 flex items-center justify-center rounded-lg text-xs font-bold transition-all duration-200 hover:text-[#FFD400] hover:bg-[#FFD400]/10"
+                style={{
+                  background: "var(--surface)",
+                  border: "1px solid var(--border)",
+                  color: "color-mix(in srgb, var(--fg) 50%, transparent)",
+                }}
               >
                 {label}
               </a>

@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { NuunLogoMark } from "@/components/ui/nuun-logo";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { cn } from "@/lib/utils/cn";
 
 const navLinks = [
@@ -19,7 +21,11 @@ const navLinks = [
   { href: "/contact",  label: "Contact"   },
 ];
 
-export function Header() {
+interface HeaderProps {
+  logoUrl?: string | null;
+}
+
+export function Header({ logoUrl }: HeaderProps) {
   const [scrolled, setScrolled]   = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
@@ -38,6 +44,36 @@ export function Header() {
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
+  const Logo = () => (
+    <Link href="/" className="flex items-center gap-3 group w-fit">
+      {logoUrl ? (
+        <Image src={logoUrl} alt="Nuun Media" width={120} height={32} className="h-8 w-auto object-contain" />
+      ) : (
+        <>
+          <NuunLogoMark height={28} className="group-hover:scale-105 transition-transform duration-300" />
+          <span className="font-bold text-[17px] tracking-tight leading-none" style={{ color: "var(--fg)" }}>
+            NUUN <span className="text-[#FFD400]">MEDIA</span>
+          </span>
+        </>
+      )}
+    </Link>
+  );
+
+  const MobileLogo = () => (
+    <Link href="/" className="flex items-center gap-2.5 group">
+      {logoUrl ? (
+        <Image src={logoUrl} alt="Nuun Media" width={96} height={28} className="h-7 w-auto object-contain" />
+      ) : (
+        <>
+          <NuunLogoMark height={25} className="group-hover:scale-105 transition-transform" />
+          <span className="font-bold text-[15px] tracking-tight leading-none" style={{ color: "var(--fg)" }}>
+            NUUN <span className="text-[#FFD400]">MEDIA</span>
+          </span>
+        </>
+      )}
+    </Link>
+  );
+
   return (
     <>
       <motion.header
@@ -46,9 +82,7 @@ export function Header() {
         transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
         className={cn(
           "fixed top-0 inset-x-0 z-50 transition-all duration-500",
-          scrolled
-            ? "bg-[#0A0A0A]/92 backdrop-blur-2xl border-b border-white/[0.07] shadow-[0_2px_24px_rgba(0,0,0,0.5)]"
-            : "bg-transparent"
+          scrolled ? "header-scrolled" : "bg-transparent"
         )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -57,15 +91,10 @@ export function Header() {
           <div className="hidden lg:grid items-center h-[72px]" style={{ gridTemplateColumns: "1fr auto 1fr" }}>
 
             {/* Logo — justified left */}
-            <Link href="/" className="flex items-center gap-3 group w-fit">
-              <NuunLogoMark height={28} className="group-hover:scale-105 transition-transform duration-300" />
-              <span className="text-white font-bold text-[17px] tracking-tight leading-none">
-                NUUN <span className="text-[#FFD400]">MEDIA</span>
-              </span>
-            </Link>
+            <Logo />
 
             {/* Nav — perfectly centered */}
-            <nav className="flex items-center gap-0.5">
+            <nav className="flex items-center gap-1">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -74,8 +103,11 @@ export function Header() {
                     "relative px-3.5 py-2 rounded-xl text-[13.5px] font-medium transition-all duration-200",
                     pathname === link.href
                       ? "text-[#FFD400] bg-[#FFD400]/10"
-                      : "text-white/55 hover:text-white hover:bg-white/[0.07]"
+                      : "text-white/55 hover:text-white hover:bg-white/[0.07] dark-nav-link"
                   )}
+                  style={pathname !== link.href ? {
+                    color: "var(--mobile-link-inactive)",
+                  } : undefined}
                 >
                   {link.label}
                   {pathname === link.href && (
@@ -87,8 +119,9 @@ export function Header() {
 
             {/* CTA — justified right */}
             <div className="flex items-center gap-2 justify-self-end">
+              <ThemeToggle />
               <Link href="/studio">
-                <Button variant="ghost" size="sm" className="text-white/45 hover:text-white text-xs px-3">
+                <Button variant="ghost" size="sm" className="text-xs px-3" style={{ color: "var(--mobile-link-inactive)" }}>
                   Studio ↗
                 </Button>
               </Link>
@@ -100,27 +133,21 @@ export function Header() {
 
           {/* ── Mobile / Tablet (<1024px): flex ── */}
           <div className="flex lg:hidden items-center justify-between h-16 sm:h-[68px]">
-            <Link href="/" className="flex items-center gap-2.5 group">
-              <NuunLogoMark
-                height={24}
-                className="group-hover:scale-105 transition-transform sm:hidden"
-              />
-              <NuunLogoMark
-                height={27}
-                className="group-hover:scale-105 transition-transform hidden sm:block"
-              />
-              <span className="text-white font-bold text-[15px] sm:text-base tracking-tight leading-none">
-                NUUN <span className="text-[#FFD400]">MEDIA</span>
-              </span>
-            </Link>
+            <MobileLogo />
 
             <div className="flex items-center gap-2">
+              <ThemeToggle />
               <Link href="/contact" className="hidden sm:block">
                 <Button size="xs" className="text-[11px]">Let&apos;s Talk</Button>
               </Link>
               <button
                 onClick={() => setMobileOpen((v) => !v)}
-                className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/[0.07] border border-white/[0.1] text-white/65 hover:text-white hover:bg-white/[0.12] transition-all"
+                className="w-9 h-9 flex items-center justify-center rounded-xl border transition-all"
+                style={{
+                  background: "var(--surface)",
+                  borderColor: "var(--border)",
+                  color: "var(--mobile-link-inactive)",
+                }}
                 aria-label="Toggle menu"
               >
                 {mobileOpen ? <X size={17} /> : <Menu size={17} />}
@@ -143,7 +170,8 @@ export function Header() {
           >
             {/* Backdrop */}
             <div
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              className="absolute inset-0 backdrop-blur-sm"
+              style={{ background: "rgba(0,0,0,0.5)" }}
               onClick={() => setMobileOpen(false)}
             />
 
@@ -153,17 +181,25 @@ export function Header() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute right-0 top-0 h-full w-[72vw] max-w-[288px] min-w-[236px] bg-[#0F0F0F] border-l border-white/[0.07] flex flex-col"
+              className="mobile-drawer absolute right-0 top-0 h-full w-[72vw] max-w-[288px] min-w-[236px] flex flex-col"
             >
               {/* Panel header */}
-              <div className="flex items-center justify-between px-4 py-4 border-b border-white/[0.06]">
-                <div className="flex items-center gap-2.5">
-                  <NuunLogoMark height={21} />
-                  <span className="text-white font-bold text-sm tracking-tight">NUUN MEDIA</span>
-                </div>
+              <div
+                className="flex items-center justify-between px-4 py-4"
+                style={{ borderBottom: "1px solid var(--mobile-drawer-border)" }}
+              >
+                {logoUrl ? (
+                  <Image src={logoUrl} alt="Nuun Media" width={80} height={22} className="h-6 w-auto object-contain" />
+                ) : (
+                  <div className="flex items-center gap-2.5">
+                    <NuunLogoMark height={21} />
+                    <span className="font-bold text-sm tracking-tight" style={{ color: "var(--fg)" }}>NUUN MEDIA</span>
+                  </div>
+                )}
                 <button
                   onClick={() => setMobileOpen(false)}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/[0.05] text-white/40 hover:text-white transition-colors"
+                  className="w-8 h-8 flex items-center justify-center rounded-lg transition-colors"
+                  style={{ background: "var(--surface)", color: "var(--mobile-link-inactive)" }}
                 >
                   <X size={15} />
                 </button>
@@ -184,13 +220,13 @@ export function Header() {
                         "flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all mb-0.5",
                         pathname === link.href
                           ? "text-[#FFD400] bg-[#FFD400]/10"
-                          : "text-white/55 hover:text-white hover:bg-white/[0.06]"
+                          : "mobile-nav-link-inactive"
                       )}
                     >
                       <span>{link.label}</span>
                       {pathname === link.href
                         ? <span className="w-1.5 h-1.5 rounded-full bg-[#FFD400]" />
-                        : <ChevronRight size={13} className="text-white/20" />
+                        : <ChevronRight size={13} style={{ color: "var(--border-hover)" }} />
                       }
                     </Link>
                   </motion.div>
@@ -198,7 +234,7 @@ export function Header() {
               </nav>
 
               {/* Footer CTA */}
-              <div className="p-4 border-t border-white/[0.06] space-y-2">
+              <div className="p-4 space-y-2" style={{ borderTop: "1px solid var(--mobile-drawer-border)" }}>
                 <Link href="/contact" className="block">
                   <Button className="w-full" size="md">Start a Project</Button>
                 </Link>
