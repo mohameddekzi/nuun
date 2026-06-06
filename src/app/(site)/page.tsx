@@ -16,13 +16,9 @@ export default async function HomePage() {
   return (
     <>
       <HeroSection />
-      <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       <ServicesSection services={services ?? []} />
-      <div className="h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />
       <AboutSection />
-      <div className="h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />
       <TestimonialsSection testimonials={testimonials ?? []} />
-      <div className="h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />
       <CTASection />
     </>
   );

@@ -31,31 +31,32 @@ export function AboutSection() {
       <div className="absolute top-0 right-0 w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] bg-[#FFD400]/[0.03] rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 xl:gap-28 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-14 lg:gap-20 xl:gap-28 items-center">
 
-          {/* Left */}
+          {/* Left — centered on mobile, left-aligned on desktop */}
           <motion.div
             initial={{ opacity: 0, x: -32 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+            className="text-center lg:text-left flex flex-col items-center lg:items-start"
           >
             <span className="badge-accent mb-5 sm:mb-6">About Nuun Media</span>
-            <h2 className="text-[clamp(2rem,5vw,3.75rem)] font-black text-white leading-tight mb-5 sm:mb-6 mt-5">
+            <h2 className="text-[clamp(2rem,5vw,3.75rem)] font-black text-white leading-tight mb-5 sm:mb-6 mt-4">
               Where Strategy Meets
               <br />
               <span className="text-[#FFD400]">Creative Vision</span>
             </h2>
-            <p className="text-white/60 text-sm sm:text-base leading-relaxed mb-4 sm:mb-5">
+            <p className="text-white/60 text-sm sm:text-base leading-relaxed mb-4 sm:mb-5 max-w-xl lg:max-w-none">
               Nuun Media is a next-generation creative and media company headquartered in Mogadishu, Somalia, operating at the intersection of creativity, technology, and digital transformation.
             </p>
-            <p className="text-white/50 text-sm sm:text-base leading-relaxed mb-8 sm:mb-10">
-              We deliver integrated media, branding, and digital communication solutions that transform ideas into measurable, real-world impact. With a strong emphasis on clarity, execution, and innovation, we enable organizations to build compelling brand identities.
+            <p className="text-white/50 text-sm sm:text-base leading-relaxed mb-8 sm:mb-10 max-w-xl lg:max-w-none">
+              We deliver integrated media, branding, and digital communication solutions that transform ideas into measurable, real-world impact.
             </p>
 
-            <motion.div variants={list} initial="hidden" whileInView="show" viewport={{ once: true }} className="space-y-3">
+            <motion.div variants={list} initial="hidden" whileInView="show" viewport={{ once: true }} className="space-y-3 w-full">
               {values.map((value, i) => (
-                <motion.div key={i} variants={item} className="flex items-start gap-3">
+                <motion.div key={i} variants={item} className="flex items-start gap-3 text-left">
                   <CheckCircle size={15} className="text-[#FFD400] mt-0.5 flex-shrink-0" />
                   <span className="text-white/60 text-sm leading-relaxed">{value}</span>
                 </motion.div>
@@ -101,7 +102,7 @@ export function AboutSection() {
               <p className="text-[#FFD400] text-[10px] sm:text-xs font-bold tracking-widest uppercase mb-4">
                 The 4D Execution Model
               </p>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+              <div className="grid grid-cols-4 gap-3">
                 {["Discover", "Define", "Design", "Develop"].map((step, i) => (
                   <div key={step} className="text-center">
                     <div className="text-[#FFD400] font-black text-base sm:text-lg mb-1">0{i + 1}</div>
