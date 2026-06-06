@@ -49,6 +49,12 @@ export function TestimonialsManager({ initialTestimonials }: { initialTestimonia
     setItems((prev) => prev.filter((item) => item.id !== t.id));
   };
 
+  const handleToggle = async (t: Testimonial) => {
+    const supabase = createClient();
+    const { data } = await supabase.from("testimonials").update({ is_active: !t.is_active }).eq("id", t.id).select().single();
+    if (data) setItems((prev) => prev.map((item) => item.id === t.id ? data : item));
+  };
+
   const columns = [
     { key: "name" as keyof Testimonial, label: "Name", render: (v: unknown) => <span className="text-white font-medium">{String(v)}</span> },
     { key: "company" as keyof Testimonial, label: "Company" },
@@ -63,7 +69,7 @@ export function TestimonialsManager({ initialTestimonials }: { initialTestimonia
 
   return (
     <>
-      <DataTable title="Testimonials" data={items} columns={columns} onAdd={openAdd} onEdit={openEdit} onDelete={handleDelete} searchKey="name" />
+      <DataTable title="Testimonials" data={items} columns={columns} onAdd={openAdd} onEdit={openEdit} onDelete={handleDelete} onToggle={handleToggle} isActiveKey="is_active" searchKey="name" />
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title={editing ? "Edit Testimonial" : "New Testimonial"}>
         <div className="space-y-4">
           <Input label="Name *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />

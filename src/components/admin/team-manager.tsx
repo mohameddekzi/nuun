@@ -13,18 +13,18 @@ export function TeamManager({ initialTeam }: { initialTeam: TeamMember[] }) {
   const [team, setTeam] = useState(initialTeam);
   const [isOpen, setIsOpen] = useState(false);
   const [editing, setEditing] = useState<TeamMember | null>(null);
-  const [form, setForm] = useState({ name: "", position: "", bio: "", order_index: 0 });
+  const [form, setForm] = useState({ name: "", position: "", bio: "", avatar_url: "", order_index: 0 });
   const [loading, setLoading] = useState(false);
 
   const openAdd = () => {
     setEditing(null);
-    setForm({ name: "", position: "", bio: "", order_index: team.length });
+    setForm({ name: "", position: "", bio: "", avatar_url: "", order_index: team.length });
     setIsOpen(true);
   };
 
   const openEdit = (t: TeamMember) => {
     setEditing(t);
-    setForm({ name: t.name, position: t.position ?? "", bio: t.bio ?? "", order_index: t.order_index });
+    setForm({ name: t.name, position: t.position ?? "", bio: t.bio ?? "", avatar_url: t.avatar_url ?? "", order_index: t.order_index });
     setIsOpen(true);
   };
 
@@ -49,6 +49,12 @@ export function TeamManager({ initialTeam }: { initialTeam: TeamMember[] }) {
     setTeam((prev) => prev.filter((item) => item.id !== t.id));
   };
 
+  const handleToggle = async (t: TeamMember) => {
+    const supabase = createClient();
+    const { data } = await supabase.from("team_members").update({ is_active: !t.is_active }).eq("id", t.id).select().single();
+    if (data) setTeam((prev) => prev.map((item) => item.id === t.id ? data : item));
+  };
+
   const columns = [
     { key: "name" as keyof TeamMember, label: "Name", render: (v: unknown) => <span className="text-white font-medium">{String(v)}</span> },
     { key: "position" as keyof TeamMember, label: "Position" },
@@ -59,11 +65,12 @@ export function TeamManager({ initialTeam }: { initialTeam: TeamMember[] }) {
 
   return (
     <>
-      <DataTable title="Team Members" data={team} columns={columns} onAdd={openAdd} onEdit={openEdit} onDelete={handleDelete} searchKey="name" />
+      <DataTable title="Team Members" data={team} columns={columns} onAdd={openAdd} onEdit={openEdit} onDelete={handleDelete} onToggle={handleToggle} isActiveKey="is_active" searchKey="name" />
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title={editing ? "Edit Member" : "Add Team Member"}>
         <div className="space-y-4">
           <Input label="Full Name *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
           <Input label="Position / Role" value={form.position} onChange={(e) => setForm({ ...form, position: e.target.value })} placeholder="Creative Director" />
+          <Input label="Avatar URL" value={form.avatar_url} onChange={(e) => setForm({ ...form, avatar_url: e.target.value })} placeholder="https://..." />
           <Textarea label="Bio" value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} rows={3} />
           <Input label="Display Order" type="number" value={form.order_index} onChange={(e) => setForm({ ...form, order_index: Number(e.target.value) })} />
           <div className="flex gap-3 pt-2">

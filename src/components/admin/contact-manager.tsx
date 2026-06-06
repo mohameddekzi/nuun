@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Modal } from "./modal";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
-import { Mail, Phone, Building2, Tag, Trash2, Eye, CheckCircle } from "lucide-react";
+import { Mail, Phone, Building2, Tag, Trash2 } from "lucide-react";
 import type { ContactMessage } from "@/lib/types/database";
 import { motion } from "framer-motion";
 
@@ -33,6 +33,13 @@ export function ContactManager({ initialMessages }: { initialMessages: ContactMe
     await supabase.from("contact_messages").delete().eq("id", msg.id);
     setMessages((prev) => prev.filter((m) => m.id !== msg.id));
     if (selected?.id === msg.id) setSelected(null);
+  };
+
+  const handleStatusChange = async (msg: ContactMessage, status: string) => {
+    const supabase = createClient();
+    await supabase.from("contact_messages").update({ status }).eq("id", msg.id);
+    setMessages((prev) => prev.map((m) => m.id === msg.id ? { ...m, status } : m));
+    if (selected?.id === msg.id) setSelected((prev) => prev ? { ...prev, status } : null);
   };
 
   const statusColors: Record<string, string> = {
@@ -151,15 +158,26 @@ export function ContactManager({ initialMessages }: { initialMessages: ContactMe
                 {selected.message}
               </div>
             </div>
-            <div className="flex items-center justify-between text-xs text-white/30">
-              <span>Received: {format(new Date(selected.created_at), "PPP 'at' p")}</span>
-              <CheckCircle size={14} className="text-green-400" />
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex flex-col gap-1.5 flex-1">
+                <label className="text-xs text-white/40">Update Status</label>
+                <select
+                  value={selected.status}
+                  onChange={(e) => handleStatusChange(selected, e.target.value)}
+                  className="h-9 px-3 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none"
+                >
+                  {["new", "in_progress", "resolved", "closed"].map((s) => (
+                    <option key={s} value={s} className="bg-[#0A0A0A] capitalize">{s.replace("_", " ")}</option>
+                  ))}
+                </select>
+              </div>
+              <a href={`mailto:${selected.email}?subject=Re: ${selected.subject || "Your Inquiry"}`} className="flex-shrink-0 mt-5">
+                <Button size="sm" className="gap-2">
+                  <Mail size={14} /> Reply
+                </Button>
+              </a>
             </div>
-            <a href={`mailto:${selected.email}?subject=Re: ${selected.subject || "Your Inquiry"}`}>
-              <Button size="sm" className="gap-2">
-                <Mail size={14} /> Reply via Email
-              </Button>
-            </a>
+            <p className="text-white/20 text-xs">Received: {format(new Date(selected.created_at), "PPP 'at' p")}</p>
           </div>
         )}
       </Modal>
