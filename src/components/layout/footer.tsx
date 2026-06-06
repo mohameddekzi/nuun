@@ -57,7 +57,7 @@ export function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-12 sm:mb-14 lg:mb-16">
 
           {/* Brand col */}
-          <div className="sm:col-span-2">
+          <div className="sm:col-span-2 text-center sm:text-left flex flex-col items-center sm:items-start">
             <Link href="/" className="inline-flex items-center gap-2.5 mb-5 group">
               <NuunLogoMark
                 height={30}
@@ -94,7 +94,7 @@ export function Footer() {
           </div>
 
           {/* Company */}
-          <div>
+          <div className="text-center sm:text-left flex flex-col items-center sm:items-start">
             <h4 className="text-white/70 font-semibold text-xs mb-5 tracking-widest uppercase">Company</h4>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
@@ -112,7 +112,7 @@ export function Footer() {
           </div>
 
           {/* Resources + Contact */}
-          <div>
+          <div className="text-center sm:text-left flex flex-col items-center sm:items-start">
             <h4 className="text-white/70 font-semibold text-xs mb-5 tracking-widest uppercase">Resources</h4>
             <ul className="space-y-3 mb-7">
               {footerLinks.resources.map((link) => (

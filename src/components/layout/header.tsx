@@ -52,25 +52,21 @@ export function Header() {
         )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
-          <div className="flex items-center justify-between h-16 sm:h-[68px] lg:h-[72px]">
-
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2.5 sm:gap-3 shrink-0 group">
-              <NuunLogoMark
-                height={24}
-                className="group-hover:scale-105 transition-transform duration-300 sm:hidden"
-              />
+          {/* Desktop: 3-col grid so nav is truly centered */}
+          <div className="hidden lg:grid grid-cols-[1fr_auto_1fr] items-center h-[72px]">
+            {/* Logo — left */}
+            <Link href="/" className="flex items-center gap-3 shrink-0 group justify-self-start">
               <NuunLogoMark
                 height={28}
-                className="group-hover:scale-105 transition-transform duration-300 hidden sm:block"
+                className="group-hover:scale-105 transition-transform duration-300"
               />
-              <span className="text-white font-bold text-base sm:text-lg tracking-tight leading-none">
+              <span className="text-white font-bold text-lg tracking-tight leading-none">
                 NUUN <span className="text-[#FFD400]">MEDIA</span>
               </span>
             </Link>
 
-            {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center gap-1">
+            {/* Nav — center */}
+            <nav className="flex items-center gap-1">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -87,8 +83,8 @@ export function Header() {
               ))}
             </nav>
 
-            {/* Desktop CTA */}
-            <div className="hidden lg:flex items-center gap-3">
+            {/* CTA — right */}
+            <div className="flex items-center gap-3 justify-self-end">
               <Link href="/studio">
                 <Button variant="ghost" size="sm" className="text-white/50 hover:text-white text-xs">
                   Studio ↗
@@ -98,9 +94,25 @@ export function Header() {
                 <Button size="sm">Start a Project</Button>
               </Link>
             </div>
+          </div>
 
-            {/* Mobile / tablet toggle */}
-            <div className="flex lg:hidden items-center gap-2.5">
+          {/* Mobile / tablet */}
+          <div className="flex lg:hidden items-center justify-between h-16 sm:h-[68px]">
+            <Link href="/" className="flex items-center gap-2.5 sm:gap-3 shrink-0 group">
+              <NuunLogoMark
+                height={24}
+                className="group-hover:scale-105 transition-transform duration-300 sm:hidden"
+              />
+              <NuunLogoMark
+                height={28}
+                className="group-hover:scale-105 transition-transform duration-300 hidden sm:block"
+              />
+              <span className="text-white font-bold text-base sm:text-lg tracking-tight leading-none">
+                NUUN <span className="text-[#FFD400]">MEDIA</span>
+              </span>
+            </Link>
+
+            <div className="flex items-center gap-2.5">
               <Link href="/contact">
                 <Button size="xs" className="hidden sm:flex text-xs">Let&apos;s Talk</Button>
               </Link>
