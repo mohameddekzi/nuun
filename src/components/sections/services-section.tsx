@@ -34,10 +34,10 @@ export function ServicesSection({ services }: ServicesSectionProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="text-center mb-12 sm:mb-16 lg:mb-20"
+          className="text-center mb-12 sm:mb-14 md:mb-16 lg:mb-20"
         >
           <span className="badge-accent mb-5 sm:mb-6">What We Do</span>
-          <h2 className="text-[clamp(2rem,5vw,3.75rem)] font-black text-white leading-tight mb-4 sm:mb-5">
+          <h2 className="text-[clamp(2rem,5vw,3.75rem)] font-black text-white leading-tight mb-4 sm:mb-5 mt-5">
             Integrated Creative
             <br />
             <span className="text-[#FFD400]">Solutions</span>
@@ -53,7 +53,7 @@ export function ServicesSection({ services }: ServicesSectionProps) {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-80px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-7"
         >
           {services.map((service, i) => {
             const Icon = iconMap[service.icon || "Star"] || Star;
@@ -61,7 +61,7 @@ export function ServicesSection({ services }: ServicesSectionProps) {
               <motion.div
                 key={service.id}
                 variants={item}
-                className="group relative card card-lift p-6 sm:p-7 lg:p-8 overflow-hidden cursor-pointer"
+                className="group relative card card-lift p-6 sm:p-7 lg:p-8 xl:p-9 overflow-hidden cursor-pointer"
               >
                 {/* Hover gradient */}
                 <div className="absolute inset-0 bg-gradient-to-br from-[#FFD400]/0 group-hover:from-[#FFD400]/[0.04] to-transparent transition-all duration-500 rounded-[20px]" />

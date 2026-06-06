@@ -25,14 +25,14 @@ export function Header() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 16);
+    const fn = () => setScrolled(window.scrollY > 20);
+    fn();
     window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
   useEffect(() => { setMobileOpen(false); }, [pathname]);
 
-  // Prevent body scroll when mobile menu open
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -47,18 +47,22 @@ export function Header() {
         className={cn(
           "fixed top-0 inset-x-0 z-50 transition-all duration-500",
           scrolled
-            ? "bg-[#0A0A0A]/85 backdrop-blur-2xl border-b border-white/[0.06]"
+            ? "bg-[#0A0A0A]/90 backdrop-blur-2xl border-b border-white/[0.07] shadow-[0_4px_32px_rgba(0,0,0,0.4)]"
             : "bg-transparent"
         )}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 md:h-18">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
+          <div className="flex items-center justify-between h-16 sm:h-[68px] lg:h-[72px]">
 
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2.5 group shrink-0">
+            <Link href="/" className="flex items-center gap-2.5 sm:gap-3 shrink-0 group">
               <NuunLogoMark
-                height={26}
-                className="group-hover:scale-105 transition-transform duration-300"
+                height={24}
+                className="group-hover:scale-105 transition-transform duration-300 sm:hidden"
+              />
+              <NuunLogoMark
+                height={28}
+                className="group-hover:scale-105 transition-transform duration-300 hidden sm:block"
               />
               <span className="text-white font-bold text-base sm:text-lg tracking-tight leading-none">
                 NUUN <span className="text-[#FFD400]">MEDIA</span>
@@ -66,16 +70,16 @@ export function Header() {
             </Link>
 
             {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center gap-0.5">
-              {navLinks.map(link => (
+            <nav className="hidden lg:flex items-center gap-1">
+              {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    "px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200",
+                    "px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200",
                     pathname === link.href
                       ? "text-[#FFD400] bg-[#FFD400]/10"
-                      : "text-white/60 hover:text-white hover:bg-white/[0.06]"
+                      : "text-white/60 hover:text-white hover:bg-white/[0.07]"
                   )}
                 >
                   {link.label}
@@ -84,7 +88,7 @@ export function Header() {
             </nav>
 
             {/* Desktop CTA */}
-            <div className="hidden lg:flex items-center gap-2">
+            <div className="hidden lg:flex items-center gap-3">
               <Link href="/studio">
                 <Button variant="ghost" size="sm" className="text-white/50 hover:text-white text-xs">
                   Studio ↗
@@ -95,14 +99,14 @@ export function Header() {
               </Link>
             </div>
 
-            {/* Mobile toggle */}
-            <div className="flex lg:hidden items-center gap-2">
-              <Link href="/contact" className="sm:block">
-                <Button size="xs" className="text-xs hidden sm:flex">Let's Talk</Button>
+            {/* Mobile / tablet toggle */}
+            <div className="flex lg:hidden items-center gap-2.5">
+              <Link href="/contact">
+                <Button size="xs" className="hidden sm:flex text-xs">Let&apos;s Talk</Button>
               </Link>
               <button
-                onClick={() => setMobileOpen(v => !v)}
-                className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/[0.05] border border-white/[0.08] text-white/70 hover:text-white hover:bg-white/[0.1] transition-all"
+                onClick={() => setMobileOpen((v) => !v)}
+                className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/[0.06] border border-white/[0.09] text-white/70 hover:text-white hover:bg-white/[0.11] transition-all"
                 aria-label="Toggle menu"
               >
                 {mobileOpen ? <X size={18} /> : <Menu size={18} />}
@@ -112,7 +116,7 @@ export function Header() {
         </div>
       </motion.header>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -122,42 +126,40 @@ export function Header() {
             transition={{ duration: 0.2 }}
             className="fixed inset-0 z-40 lg:hidden"
           >
-            {/* Backdrop */}
             <div
-              className="absolute inset-0 bg-[#0A0A0A]/70 backdrop-blur-sm"
+              className="absolute inset-0 bg-[#0A0A0A]/75 backdrop-blur-sm"
               onClick={() => setMobileOpen(false)}
             />
 
-            {/* Drawer */}
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute right-0 top-0 h-full w-[280px] bg-[#0F0F0F] border-l border-white/[0.07] flex flex-col"
+              className="absolute right-0 top-0 h-full w-[75vw] max-w-[300px] min-w-[240px] bg-[#0F0F0F] border-l border-white/[0.07] flex flex-col"
             >
               {/* Drawer header */}
-              <div className="flex items-center justify-between px-5 py-5 border-b border-white/[0.06]">
-                <div className="flex items-center gap-2">
-                  <NuunLogoMark height={20} />
+              <div className="flex items-center justify-between px-4 sm:px-5 py-4 sm:py-5 border-b border-white/[0.06]">
+                <div className="flex items-center gap-2.5">
+                  <NuunLogoMark height={22} />
                   <span className="text-white font-bold text-sm">NUUN MEDIA</span>
                 </div>
                 <button
                   onClick={() => setMobileOpen(false)}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/[0.05] text-white/50 hover:text-white"
+                  className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/[0.05] text-white/50 hover:text-white transition-colors"
                 >
                   <X size={16} />
                 </button>
               </div>
 
               {/* Nav links */}
-              <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
+              <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-1">
                 {navLinks.map((link, i) => (
                   <motion.div
                     key={link.href}
                     initial={{ opacity: 0, x: 16 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.04 + 0.1 }}
+                    transition={{ delay: i * 0.045 + 0.08 }}
                   >
                     <Link
                       href={link.href}
@@ -178,7 +180,7 @@ export function Header() {
               </nav>
 
               {/* Drawer footer */}
-              <div className="p-4 border-t border-white/[0.06] space-y-2">
+              <div className="p-4 border-t border-white/[0.06] space-y-2.5">
                 <Link href="/contact" className="block">
                   <Button className="w-full" size="md">Start a Project</Button>
                 </Link>
