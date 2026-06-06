@@ -90,7 +90,7 @@ export function HeroSection() {
     <section
       ref={containerRef}
       onMouseMove={onMouseMove}
-      className="relative min-h-[100svh] flex flex-col bg-[#0A0A0A]"
+      className="relative min-h-[100svh] flex flex-col bg-[#0A0A0A] w-full"
     >
       {/* ── Decorations (own overflow-hidden wrapper so ring doesn't cause hscroll) ── */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -150,7 +150,7 @@ export function HeroSection() {
 
       {/* ── Main content — flex-1 so it expands, vertically centered ── */}
       <div
-        className="relative z-10 flex-1 flex flex-col items-center justify-center w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-4 text-center"
+        className="relative z-10 flex-1 flex flex-col items-center justify-center w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
         style={{
           paddingTop: "clamp(88px, 12vh, 120px)",
           paddingBottom: "clamp(48px, 6vh, 72px)",

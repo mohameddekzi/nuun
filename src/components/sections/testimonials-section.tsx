@@ -23,7 +23,7 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[260px] bg-[#FFD400]/[0.04] rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.07] to-transparent" />
 
-      <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -37,7 +37,7 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
           </h2>
         </motion.div>
 
-        <div className="relative">
+        <div className="relative max-w-3xl mx-auto w-full">
           <AnimatePresence mode="wait">
             <motion.div
               key={current}

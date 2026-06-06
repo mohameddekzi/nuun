@@ -26,7 +26,7 @@ export function ServicesSection({ services }: ServicesSectionProps) {
       <div className="absolute inset-0 dot-pattern pointer-events-none" />
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.07] to-transparent" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
 
         {/* Header */}
         <motion.div

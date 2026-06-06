@@ -56,7 +56,7 @@ export function Footer({ logoUrl }: FooterProps) {
       <div className="absolute inset-0 dot-pattern opacity-30 pointer-events-none" />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[160px] rounded-full blur-3xl pointer-events-none" style={{ background: "var(--accent-glow)" }} />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 sm:pt-16 lg:pt-20 pb-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 sm:pt-16 lg:pt-20 pb-8 w-full">
 
         {/* Main grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-12 sm:mb-14 lg:mb-16">
