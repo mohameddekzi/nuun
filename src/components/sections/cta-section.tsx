@@ -25,7 +25,7 @@ export function CTASection() {
         className="hidden sm:block absolute bottom-10 right-10 w-12 h-12 sm:w-16 sm:h-16 border border-white/5 rounded-xl pointer-events-none"
       />
 
-      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center w-full">
+      <div className="relative section-inner text-center">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}

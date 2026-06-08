@@ -85,7 +85,7 @@ export function Header({ logoUrl }: HeaderProps) {
           scrolled ? "header-scrolled" : "bg-transparent"
         )}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div className="section-inner">
 
           {/* ── Desktop (≥1024px): true 3-col grid ── */}
           <div className="hidden lg:grid items-center h-[72px]" style={{ gridTemplateColumns: "1fr auto 1fr" }}>

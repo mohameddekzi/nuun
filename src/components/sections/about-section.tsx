@@ -30,7 +30,7 @@ export function AboutSection() {
     <section className="relative section-padding bg-[#0A0A0A] overflow-hidden">
       <div className="absolute top-0 right-0 w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] bg-[#FFD400]/[0.03] rounded-full blur-3xl pointer-events-none" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div className="relative section-inner">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-14 lg:gap-20 xl:gap-28 items-center">
 
           {/* Left — centered on mobile, left-aligned on desktop */}

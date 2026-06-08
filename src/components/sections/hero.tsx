@@ -150,7 +150,7 @@ export function HeroSection() {
 
       {/* ── Main content — flex-1 so it expands, vertically centered ── */}
       <div
-        className="relative z-10 flex-1 flex flex-col items-center justify-center w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
+        className="relative z-10 flex-1 flex flex-col items-center justify-center section-inner text-center"
         style={{
           paddingTop: "clamp(88px, 12vh, 120px)",
           paddingBottom: "clamp(48px, 6vh, 72px)",
