@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* Layout: sections use .section-inner for reliable centering */
 /* ────────────────────────────────
    THEME VARIABLES
 ──────────────────────────────── */
