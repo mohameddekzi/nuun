@@ -32,9 +32,10 @@ const socials = [
 
 interface FooterProps {
   logoUrl?: string | null;
+  logoHeight?: number;
 }
 
-export function Footer({ logoUrl }: FooterProps) {
+export function Footer({ logoUrl, logoHeight = 32 }: FooterProps) {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
 
@@ -65,7 +66,7 @@ export function Footer({ logoUrl }: FooterProps) {
           <div className="sm:col-span-2 text-center sm:text-left flex flex-col items-center sm:items-start">
             <Link href="/" className="inline-flex items-center gap-2.5 mb-5 group">
               {logoUrl ? (
-                <Image src={logoUrl} alt="Nuun Media" width={120} height={32} className="h-8 w-auto object-contain group-hover:scale-105 transition-transform duration-300" />
+                <Image src={logoUrl} alt="Nuun Media" width={logoHeight * 4} height={logoHeight} style={{ height: logoHeight }} className="w-auto object-contain group-hover:scale-105 transition-transform duration-300" />
               ) : (
                 <>
                   <NuunLogoMark height={30} className="group-hover:scale-105 transition-transform duration-300" />

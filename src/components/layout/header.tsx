@@ -23,9 +23,10 @@ const navLinks = [
 
 interface HeaderProps {
   logoUrl?: string | null;
+  logoHeight?: number;
 }
 
-export function Header({ logoUrl }: HeaderProps) {
+export function Header({ logoUrl, logoHeight = 32 }: HeaderProps) {
   const [scrolled, setScrolled]   = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
@@ -47,7 +48,7 @@ export function Header({ logoUrl }: HeaderProps) {
   const Logo = () => (
     <Link href="/" className="flex items-center gap-3 group w-fit">
       {logoUrl ? (
-        <Image src={logoUrl} alt="Nuun Media" width={120} height={32} className="h-8 w-auto object-contain" />
+        <Image src={logoUrl} alt="Nuun Media" width={logoHeight * 4} height={logoHeight} style={{ height: logoHeight }} className="w-auto object-contain" />
       ) : (
         <>
           <NuunLogoMark height={28} className="group-hover:scale-105 transition-transform duration-300" />
@@ -62,7 +63,7 @@ export function Header({ logoUrl }: HeaderProps) {
   const MobileLogo = () => (
     <Link href="/" className="flex items-center gap-2.5 group">
       {logoUrl ? (
-        <Image src={logoUrl} alt="Nuun Media" width={96} height={28} className="h-7 w-auto object-contain" />
+        <Image src={logoUrl} alt="Nuun Media" width={logoHeight * 3} height={logoHeight - 4} style={{ height: Math.max(logoHeight - 6, 20) }} className="w-auto object-contain" />
       ) : (
         <>
           <NuunLogoMark height={25} className="group-hover:scale-105 transition-transform" />
@@ -189,7 +190,7 @@ export function Header({ logoUrl }: HeaderProps) {
                 style={{ borderBottom: "1px solid var(--mobile-drawer-border)" }}
               >
                 {logoUrl ? (
-                  <Image src={logoUrl} alt="Nuun Media" width={80} height={22} className="h-6 w-auto object-contain" />
+                  <Image src={logoUrl} alt="Nuun Media" width={logoHeight * 2} height={logoHeight - 10} style={{ height: Math.max(logoHeight - 12, 18) }} className="w-auto object-contain" />
                 ) : (
                   <div className="flex items-center gap-2.5">
                     <NuunLogoMark height={21} />

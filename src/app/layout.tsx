@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,15 +39,28 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export default function RootLayout({
+async function getSiteTheme(): Promise<string> {
+  try {
+    const supabase = await createServerSupabaseClient();
+    const { data } = await supabase.from("settings").select("value").eq("key", "theme_default").single();
+    if (data?.value && typeof data.value === "string") return data.value;
+    return "dark";
+  } catch {
+    return "dark";
+  }
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const defaultTheme = await getSiteTheme();
+
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full`} suppressHydrationWarning>
       <body className="min-h-full antialiased">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider defaultTheme={defaultTheme}>{children}</ThemeProvider>
       </body>
     </html>
   );

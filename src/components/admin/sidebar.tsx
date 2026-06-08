@@ -7,7 +7,7 @@ import {
   LayoutDashboard, Briefcase, FolderOpen, FileText,
   Star, DollarSign, HelpCircle, MessageSquare,
   Image, Settings, Users, LogOut, ChevronLeft, Menu,
-  Globe, X
+  Globe, X, Building2, Receipt
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
@@ -21,6 +21,8 @@ const navItems = [
   { href: "/studio/testimonials", icon: Star, label: "Testimonials" },
   { href: "/studio/pricing", icon: DollarSign, label: "Pricing" },
   { href: "/studio/faq", icon: HelpCircle, label: "FAQ" },
+  { href: "/studio/clients", icon: Building2, label: "Clients" },
+  { href: "/studio/quotations", icon: Receipt, label: "Quotations" },
   { href: "/studio/contact", icon: MessageSquare, label: "Messages" },
   { href: "/studio/team", icon: Users, label: "Team" },
   { href: "/studio/media", icon: Image, label: "Media" },

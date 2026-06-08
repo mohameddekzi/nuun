@@ -1,0 +1,117 @@
+"use client";
+
+import { useRef, useState } from "react";
+import Image from "next/image";
+import { createClient } from "@/lib/supabase/client";
+import { Upload, X, Loader2 } from "lucide-react";
+
+interface ImageUploadProps {
+  value?: string | null;
+  onChange: (url: string | null) => void;
+  folder?: string;
+  className?: string;
+  label?: string;
+  hint?: string;
+  aspectRatio?: string;
+}
+
+export function ImageUpload({
+  value,
+  onChange,
+  folder = "uploads",
+  className = "",
+  label = "Upload Image",
+  hint = "PNG, JPG, SVG, WebP",
+  aspectRatio = "aspect-video",
+}: ImageUploadProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleFile = async (file: File | null) => {
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      setError("File must be under 5MB");
+      return;
+    }
+    setError(null);
+    setUploading(true);
+
+    try {
+      const supabase = createClient();
+      const ext = file.name.split(".").pop();
+      const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error: uploadError } = await supabase.storage.from("media").upload(path, file, { upsert: true });
+      if (uploadError) throw uploadError;
+      const { data } = supabase.storage.from("media").getPublicUrl(path);
+      onChange(data.publicUrl);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className={`space-y-2 ${className}`}>
+      {label && (
+        <p className="text-white/70 text-sm font-medium">{label}</p>
+      )}
+
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => handleFile(e.target.files?.[0] ?? null)}
+      />
+
+      {value ? (
+        <div className="relative group rounded-xl overflow-hidden border border-white/10">
+          <div className={`relative ${aspectRatio} w-full`}>
+            <Image src={value} alt="Uploaded" fill className="object-contain" unoptimized />
+          </div>
+          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+            <button
+              onClick={() => inputRef.current?.click()}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FFD400] text-black text-xs font-semibold rounded-lg"
+            >
+              <Upload size={12} /> Replace
+            </button>
+            <button
+              onClick={() => onChange(null)}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-red-500/20 text-red-400 text-xs font-semibold rounded-lg"
+            >
+              <X size={12} /> Remove
+            </button>
+          </div>
+          {uploading && (
+            <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+              <Loader2 size={24} className="text-[#FFD400] animate-spin" />
+            </div>
+          )}
+        </div>
+      ) : (
+        <button
+          onClick={() => inputRef.current?.click()}
+          disabled={uploading}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={(e) => { e.preventDefault(); handleFile(e.dataTransfer.files[0] ?? null); }}
+          className={`w-full ${aspectRatio} border-2 border-dashed border-white/15 rounded-xl flex flex-col items-center justify-center gap-2 hover:border-[#FFD400]/40 transition-colors cursor-pointer disabled:opacity-50`}
+        >
+          {uploading ? (
+            <Loader2 size={22} className="text-[#FFD400] animate-spin" />
+          ) : (
+            <>
+              <Upload size={22} className="text-white/30" />
+              <span className="text-white/50 text-sm">{label}</span>
+              <span className="text-white/25 text-xs">{hint} · max 5MB</span>
+            </>
+          )}
+        </button>
+      )}
+
+      {error && <p className="text-red-400 text-xs">{error}</p>}
+    </div>
+  );
+}

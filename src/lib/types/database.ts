@@ -93,6 +93,16 @@ export interface Database {
         Insert: { id?: string; page: string; referrer?: string | null; user_agent?: string | null; country?: string | null };
         Update: { page?: string; referrer?: string | null; user_agent?: string | null; country?: string | null };
       };
+      quotations: {
+        Row: { id: string; quote_number: string; status: string; type: string; client_name: string; client_email: string | null; client_phone: string | null; client_company: string | null; client_address: string | null; issue_date: string; due_date: string | null; currency: string; discount_type: string; discount_value: number; tax_rate: number; notes: string | null; terms: string | null; footer_text: string | null; created_by: string | null; created_at: string; updated_at: string };
+        Insert: { id?: string; quote_number?: string; status?: string; type?: string; client_name?: string; client_email?: string | null; client_phone?: string | null; client_company?: string | null; client_address?: string | null; issue_date?: string; due_date?: string | null; currency?: string; discount_type?: string; discount_value?: number; tax_rate?: number; notes?: string | null; terms?: string | null; footer_text?: string | null; created_by?: string | null };
+        Update: { quote_number?: string; status?: string; type?: string; client_name?: string; client_email?: string | null; client_phone?: string | null; client_company?: string | null; client_address?: string | null; issue_date?: string; due_date?: string | null; currency?: string; discount_type?: string; discount_value?: number; tax_rate?: number; notes?: string | null; terms?: string | null; footer_text?: string | null };
+      };
+      quotation_items: {
+        Row: { id: string; quotation_id: string; order_index: number; description: string; quantity: number; unit_price: number; created_at: string };
+        Insert: { id?: string; quotation_id: string; order_index?: number; description?: string; quantity?: number; unit_price?: number };
+        Update: { order_index?: number; description?: string; quantity?: number; unit_price?: number };
+      };
     };
   };
 }
@@ -112,3 +122,5 @@ export type Page = Database["public"]["Tables"]["pages"]["Row"];
 export type Media = Database["public"]["Tables"]["media"]["Row"];
 export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 export type Role = Database["public"]["Tables"]["roles"]["Row"];
+export type Quotation = Database["public"]["Tables"]["quotations"]["Row"];
+export type QuotationItem = Database["public"]["Tables"]["quotation_items"]["Row"];
