@@ -35,6 +35,7 @@ interface QuotationBuilderProps {
   quotation?: Quotation;
   items?: QuotationItem[];
   userId: string;
+  initialType?: "quotation" | "invoice";
 }
 
 const CURRENCIES = ["USD", "EUR", "GBP", "SOS", "KES", "ETB", "SAR", "AED"];
@@ -99,12 +100,12 @@ function SortableItem({
   );
 }
 
-export function QuotationBuilder({ quotation, items: initialItems = [], userId }: QuotationBuilderProps) {
+export function QuotationBuilder({ quotation, items: initialItems = [], userId, initialType = "quotation" }: QuotationBuilderProps) {
   const router = useRouter();
   const isNew = !quotation;
 
   const [form, setForm] = useState({
-    type: quotation?.type ?? "quotation",
+    type: quotation?.type ?? initialType,
     status: quotation?.status ?? "draft",
     client_name: quotation?.client_name ?? "",
     client_email: quotation?.client_email ?? "",

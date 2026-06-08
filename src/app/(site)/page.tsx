@@ -10,11 +10,12 @@ import type { ClientCompany } from "@/components/sections/clients-section";
 export default async function HomePage() {
   const supabase = await createServerSupabaseClient();
 
-  const [{ data: services }, { data: testimonials }, { data: clientsSetting }] = await Promise.all([
+  const [{ data: services }, { data: testimonials }, { data: clientsRows }] = await Promise.all([
     supabase.from("services").select("*").eq("is_active", true).order("order_index"),
     supabase.from("testimonials").select("*").eq("is_active", true).order("order_index"),
-    supabase.from("settings").select("value").eq("key", "clients").single(),
+    supabase.from("settings").select("value").eq("key", "clients").limit(1),
   ]);
+  const clientsSetting = clientsRows?.[0] ?? null;
 
   const clients: ClientCompany[] = Array.isArray(clientsSetting?.value)
     ? (clientsSetting.value as ClientCompany[]).filter((c) => c.logo_url || c.name)

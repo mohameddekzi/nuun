@@ -13,7 +13,7 @@ export default async function NewQuotationPage({ searchParams }: { searchParams:
   return (
     <AdminLayout>
       <div className="p-8">
-        <QuotationBuilder userId={user.id} quotation={type === "invoice" ? { type: "invoice" } as never : undefined} />
+        <QuotationBuilder userId={user.id} initialType={type === "invoice" ? "invoice" : "quotation"} />
       </div>
     </AdminLayout>
   );
