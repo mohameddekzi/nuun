@@ -27,7 +27,7 @@ const item: Variants = {
 
 export function AboutSection() {
   return (
-    <section className="relative section-padding bg-[#0A0A0A] overflow-hidden">
+    <section className="relative section-padding overflow-hidden" style={{ background: "var(--bg)" }}>
       <div className="absolute top-0 right-0 w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] bg-[#FFD400]/[0.03] rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative section-inner">

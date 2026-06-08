@@ -22,7 +22,7 @@ const item: Variants = {
 
 export function ServicesSection({ services }: ServicesSectionProps) {
   return (
-    <section className="relative section-padding bg-[#0D0D0D] overflow-hidden">
+    <section className="relative section-padding overflow-hidden" style={{ background: "var(--bg-alt)" }}>
       <div className="absolute inset-0 dot-pattern pointer-events-none" />
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.07] to-transparent" />
 

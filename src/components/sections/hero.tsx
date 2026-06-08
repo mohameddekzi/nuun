@@ -90,7 +90,8 @@ export function HeroSection() {
     <section
       ref={containerRef}
       onMouseMove={onMouseMove}
-      className="relative min-h-[100svh] flex flex-col bg-[#0A0A0A] w-full"
+      className="relative min-h-[100svh] flex flex-col w-full"
+      style={{ background: "var(--bg)" }}
     >
       {/* ── Decorations (own overflow-hidden wrapper so ring doesn't cause hscroll) ── */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -269,7 +270,7 @@ export function HeroSection() {
       </motion.div>
 
       {/* Bottom gradient */}
-      <div className="absolute bottom-0 inset-x-0 h-20 sm:h-28 bg-gradient-to-t from-[#0A0A0A] to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 inset-x-0 h-20 sm:h-28 pointer-events-none" style={{ background: "linear-gradient(to top, var(--bg), transparent)" }} />
 
       {/* Scroll cue */}
       <motion.div

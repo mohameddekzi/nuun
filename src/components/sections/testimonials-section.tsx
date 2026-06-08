@@ -18,7 +18,7 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
   const next = () => setCurrent((c) => (c + 1) % testimonials.length);
 
   return (
-    <section className="relative section-padding bg-[#0D0D0D] overflow-hidden">
+    <section className="relative section-padding overflow-hidden" style={{ background: "var(--bg-alt)" }}>
       <div className="absolute inset-0 grid-pattern opacity-20 pointer-events-none" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[260px] bg-[#FFD400]/[0.04] rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.07] to-transparent" />

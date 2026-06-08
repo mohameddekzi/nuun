@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 export function CTASection() {
   return (
-    <section className="relative section-padding bg-[#0D0D0D] overflow-hidden">
+    <section className="relative section-padding overflow-hidden" style={{ background: "var(--bg-alt)" }}>
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="w-[600px] h-[300px] sm:w-[800px] sm:h-[400px] bg-[#FFD400]/[0.06] rounded-full blur-3xl" />
       </div>
