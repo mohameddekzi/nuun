@@ -23,11 +23,12 @@ export function MediaPicker({ onSelect, onClose, accept = "image" }: MediaPicker
 
   useEffect(() => {
     async function load() {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("media")
         .select("*")
         .order("created_at", { ascending: false })
         .limit(200);
+      if (error) console.warn("media library load failed:", error.message);
       setMedia(data ?? []);
       setLoading(false);
     }
