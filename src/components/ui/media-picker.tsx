@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Image from "next/image";
-import { Search, X, Upload, Loader2, Check, FolderOpen } from "lucide-react";
+import { Search, X, Upload, Loader2, Check, FolderOpen, AlertCircle } from "lucide-react";
 import type { Media } from "@/lib/types/database";
 
 interface MediaPickerProps {
@@ -15,22 +15,31 @@ interface MediaPickerProps {
 export function MediaPicker({ onSelect, onClose, accept = "image" }: MediaPickerProps) {
   const [media, setMedia] = useState<Media[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const supabase = createClient();
 
   useEffect(() => {
     async function load() {
-      const { data, error } = await supabase
-        .from("media")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(200);
-      if (error) console.warn("media library load failed:", error.message);
-      setMedia(data ?? []);
-      setLoading(false);
+      setLoadError(null);
+      try {
+        // Use the server API route — avoids client-side auth/cookie issues
+        const res = await fetch("/api/media");
+        const json = await res.json();
+        if (!res.ok || json.error) {
+          setLoadError(json.error ?? "Failed to load media");
+          setMedia([]);
+        } else {
+          setMedia(json.data ?? []);
+        }
+      } catch (e) {
+        setLoadError(String(e));
+        setMedia([]);
+      } finally {
+        setLoading(false);
+      }
     }
     load();
   }, []);
@@ -44,23 +53,26 @@ export function MediaPicker({ onSelect, onClose, accept = "image" }: MediaPicker
   const handleUpload = async (files: FileList | null) => {
     if (!files?.length) return;
     setUploading(true);
+    const supabase = createClient();
     for (const file of Array.from(files)) {
       const ext = file.name.split(".").pop();
       const path = `media/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
       const { error } = await supabase.storage.from("media").upload(path, file);
-      if (error) continue;
+      if (error) { console.warn("upload failed:", error.message); continue; }
       const { data: urlData } = supabase.storage.from("media").getPublicUrl(path);
-      const { data: row } = await supabase.from("media").insert({
+      const { data: row, error: dbErr } = await supabase.from("media").insert({
         name: file.name,
         file_path: path,
         file_url: urlData.publicUrl,
         file_type: file.type,
         file_size: file.size,
+        folder: "media",
       }).select().single();
-      if (row) {
-        setMedia((prev) => [row, ...prev]);
-        setSelected(row.file_url);
-      }
+      if (dbErr) console.warn("media insert failed:", dbErr.message);
+      // Always add to UI using the public URL even if DB insert failed
+      const newRow = row ?? { id: path, name: file.name, file_path: path, file_url: urlData.publicUrl, file_type: file.type, file_size: file.size, folder: "media", alt_text: null, caption: null, uploaded_by: null, created_at: new Date().toISOString() };
+      setMedia((prev) => [newRow as Media, ...prev]);
+      setSelected(urlData.publicUrl);
     }
     setUploading(false);
   };
@@ -126,6 +138,13 @@ export function MediaPicker({ onSelect, onClose, accept = "image" }: MediaPicker
           {loading ? (
             <div className="flex items-center justify-center py-16">
               <Loader2 size={24} className="text-[#FFD400] animate-spin" />
+            </div>
+          ) : loadError ? (
+            <div className="text-center py-16">
+              <AlertCircle size={28} className="text-red-400/60 mx-auto mb-3" />
+              <p className="text-red-400/70 text-sm">Could not load media</p>
+              <p className="text-white/25 text-xs mt-1 font-mono">{loadError}</p>
+              <button onClick={() => { setLoading(true); setLoadError(null); fetch("/api/media").then(r=>r.json()).then(j=>{ setMedia(j.data??[]); setLoading(false); }).catch(e=>{ setLoadError(String(e)); setLoading(false); }); }} className="mt-4 text-[#FFD400] text-xs underline">Retry</button>
             </div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-16">
