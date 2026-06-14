@@ -121,19 +121,30 @@ html.light .bg-\[\#0F0F0F\]       { background-color: var(--bg-alt) !important; 
 html.light .from-\[\#0A0A0A\]     { --tw-gradient-from: var(--bg) !important; }
 html.light .to-\[\#0A0A0A\]       { --tw-gradient-to: var(--bg) !important; }
 
-/* White text → theme foreground */
+/* White text → theme foreground (full opacity scale) */
 html.light .text-white            { color: var(--fg) !important; }
 html.light .text-white\/80        { color: color-mix(in srgb, var(--fg) 80%, transparent) !important; }
+html.light .text-white\/70        { color: color-mix(in srgb, var(--fg) 70%, transparent) !important; }
 html.light .text-white\/60        { color: color-mix(in srgb, var(--fg) 60%, transparent) !important; }
 html.light .text-white\/55        { color: color-mix(in srgb, var(--fg) 55%, transparent) !important; }
 html.light .text-white\/50        { color: color-mix(in srgb, var(--fg) 50%, transparent) !important; }
 html.light .text-white\/45        { color: color-mix(in srgb, var(--fg) 45%, transparent) !important; }
 html.light .text-white\/40        { color: color-mix(in srgb, var(--fg) 40%, transparent) !important; }
+html.light .text-white\/35        { color: color-mix(in srgb, var(--fg) 35%, transparent) !important; }
 html.light .text-white\/30        { color: color-mix(in srgb, var(--fg) 30%, transparent) !important; }
+html.light .text-white\/25        { color: color-mix(in srgb, var(--fg) 25%, transparent) !important; }
 html.light .text-white\/20        { color: color-mix(in srgb, var(--fg) 20%, transparent) !important; }
+html.light .text-white\/15        { color: color-mix(in srgb, var(--fg) 15%, transparent) !important; }
 html.light .text-white\/\[0\.17\] { color: color-mix(in srgb, var(--fg) 17%, transparent) !important; }
 html.light .text-white\/\[0\.06\] { color: color-mix(in srgb, var(--fg) 6%, transparent) !important; }
+html.light .text-white\/\[0\.04\] { color: color-mix(in srgb, var(--fg) 4%, transparent) !important; }
+html.light .text-white\/\[0\.03\] { color: color-mix(in srgb, var(--fg) 3%, transparent) !important; }
 html.light .text-white\/\[0\.025\]{ color: color-mix(in srgb, var(--fg) 2%, transparent) !important; }
+
+/* Input placeholders → theme foreground */
+html.light .placeholder\:text-white\/20::placeholder { color: color-mix(in srgb, var(--fg) 20%, transparent) !important; }
+html.light .placeholder\:text-white\/25::placeholder { color: color-mix(in srgb, var(--fg) 25%, transparent) !important; }
+html.light .placeholder\:text-white\/30::placeholder { color: color-mix(in srgb, var(--fg) 30%, transparent) !important; }
 
 /* Accent yellow → theme accent */
 html.light .text-\[\#FFD400\]     { color: var(--accent) !important; }
