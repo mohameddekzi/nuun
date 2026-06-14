@@ -273,7 +273,13 @@ function SidebarContent({
 
         {/* Finance */}
         <GroupLabel label="Finance" collapsed={collapsed} />
-        <FinanceGroup collapsed={collapsed} pathname={pathname} onClick={onClose} />
+        {FINANCE_ITEMS.map(({ href, icon, label }) => (
+          <NavItem
+            key={href} href={href} icon={icon} label={label}
+            active={pathname === href || pathname.startsWith(href + "/")}
+            collapsed={collapsed} onClick={onClose}
+          />
+        ))}
 
         {/* Audience */}
         <GroupLabel label="Audience" collapsed={collapsed} />

@@ -39,7 +39,12 @@ export function ImageUpload({
       const supabase = createClient();
       const ext = file.name.split(".").pop();
       const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-      const { error: uploadError } = await supabase.storage.from("media").upload(path, file, { upsert: true });
+      let { error: uploadError } = await supabase.storage.from("media").upload(path, file, { upsert: true });
+      if (uploadError?.message?.includes("Bucket not found")) {
+        await fetch("/api/storage/setup", { method: "POST" });
+        const retry = await supabase.storage.from("media").upload(path, file, { upsert: true });
+        uploadError = retry.error;
+      }
       if (uploadError) throw uploadError;
       const { data } = supabase.storage.from("media").getPublicUrl(path);
 

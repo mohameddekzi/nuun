@@ -57,7 +57,12 @@ export function MediaPicker({ onSelect, onClose, accept = "image" }: MediaPicker
     for (const file of Array.from(files)) {
       const ext = file.name.split(".").pop();
       const path = `media/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-      const { error } = await supabase.storage.from("media").upload(path, file);
+      let { error } = await supabase.storage.from("media").upload(path, file);
+      if (error?.message?.includes("Bucket not found")) {
+        await fetch("/api/storage/setup", { method: "POST" });
+        const retry = await supabase.storage.from("media").upload(path, file);
+        error = retry.error;
+      }
       if (error) { console.warn("upload failed:", error.message); continue; }
       const { data: urlData } = supabase.storage.from("media").getPublicUrl(path);
       const { data: row, error: dbErr } = await supabase.from("media").insert({

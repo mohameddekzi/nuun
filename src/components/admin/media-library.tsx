@@ -40,7 +40,12 @@ export function MediaLibrary({ userId }: MediaLibraryProps) {
     for (const file of Array.from(files)) {
       const ext = file.name.split(".").pop();
       const path = `media/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-      const { error: uploadError } = await supabase.storage.from("media").upload(path, file);
+      let { error: uploadError } = await supabase.storage.from("media").upload(path, file);
+      if (uploadError?.message?.includes("Bucket not found")) {
+        await fetch("/api/storage/setup", { method: "POST" });
+        const retry = await supabase.storage.from("media").upload(path, file);
+        uploadError = retry.error;
+      }
       if (uploadError) continue;
 
       const { data: urlData } = supabase.storage.from("media").getPublicUrl(path);
