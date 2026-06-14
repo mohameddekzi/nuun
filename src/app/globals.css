@@ -112,7 +112,6 @@ body {
 
 /* ────────────────────────────────
    LIGHT MODE — FULL SITE OVERRIDES
-   Safe for admin: .admin-shell resets --fg/#FFFFFF, --bg/#0A0A0A locally
 ──────────────────────────────── */
 
 /* Section / page backgrounds */
@@ -154,11 +153,15 @@ html.light .border-\[\#FFD400\]\/40 { border-color: rgba(196,154,0,0.4) !importa
 html.light .border-\[\#FFD400\]\/60 { border-color: rgba(196,154,0,0.6) !important; }
 
 /* White opacity backgrounds → dark opacity for light mode */
+html.light .bg-white\/\[0\.02\]   { background-color: rgba(0,0,0,0.02) !important; }
 html.light .bg-white\/\[0\.03\]   { background-color: rgba(0,0,0,0.03) !important; }
 html.light .bg-white\/\[0\.05\]   { background-color: rgba(0,0,0,0.05) !important; }
+html.light .bg-white\/\[0\.06\]   { background-color: rgba(0,0,0,0.06) !important; }
 html.light .bg-white\/\[0\.07\]   { background-color: rgba(0,0,0,0.07) !important; }
+html.light .bg-white\/\[0\.12\]   { background-color: rgba(0,0,0,0.12) !important; }
 html.light .bg-white\/5           { background-color: rgba(0,0,0,0.05) !important; }
 html.light .bg-white\/10          { background-color: rgba(0,0,0,0.1) !important; }
+html.light .bg-\[\#0F0F0F\]       { background-color: var(--bg) !important; }
 
 /* White opacity borders → dark opacity */
 html.light .border-white\/\[0\.025\] { border-color: rgba(0,0,0,0.04) !important; }
@@ -168,8 +171,12 @@ html.light .border-white\/\[0\.06\]  { border-color: rgba(0,0,0,0.06) !important
 html.light .border-white\/\[0\.07\]  { border-color: rgba(0,0,0,0.07) !important; }
 html.light .border-white\/\[0\.08\]  { border-color: rgba(0,0,0,0.08) !important; }
 html.light .border-white\/\[0\.10\]  { border-color: rgba(0,0,0,0.10) !important; }
+html.light .border-white\/\[0\.15\]  { border-color: rgba(0,0,0,0.15) !important; }
 html.light .border-white\/5       { border-color: rgba(0,0,0,0.05) !important; }
 html.light .border-white\/10      { border-color: rgba(0,0,0,0.1) !important; }
+
+/* Divide borders → dark opacity */
+html.light .divide-white\/\[0\.04\] > * + * { border-color: rgba(0,0,0,0.04) !important; }
 
 /* Gradient via overrides */
 html.light .via-white\/\[0\.07\]  { --tw-gradient-stops: var(--tw-gradient-from), rgba(0,0,0,0.07), var(--tw-gradient-to) !important; }
@@ -204,19 +211,12 @@ html.light .glow-top {
 }
 
 /* ────────────────────────────────
-   ADMIN: always dark
+   ADMIN SHELL — theme-aware
 ──────────────────────────────── */
 .admin-shell {
-  --bg: #0A0A0A;
-  --fg: #FFFFFF;
-  --accent: #FFD400;
-  --accent-dim: rgba(255, 212, 0, 0.12);
-  --border: rgba(255, 255, 255, 0.07);
-  --surface: rgba(255, 255, 255, 0.03);
-  --surface-hover: rgba(255, 255, 255, 0.06);
-  background: #0A0A0A !important;
-  color: #FFFFFF !important;
-  color-scheme: dark;
+  /* theme propagates from html.light / html.dark */
+  background: var(--bg);
+  color: var(--fg);
 }
 
 /* ────────────────────────────────
@@ -327,8 +327,8 @@ html.light .glow-top {
    ADMIN SIDEBAR
 ──────────────────────────────── */
 .admin-sidebar {
-  background: #0D0D0D;
-  border-right: 1px solid rgba(255,255,255,0.05);
+  background: var(--bg-alt);
+  border-right: 1px solid var(--border);
 }
 
 /* ────────────────────────────────
