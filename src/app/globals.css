@@ -343,6 +343,14 @@ html.light .glow-top {
 }
 
 /* ────────────────────────────────
+   THEME-AWARE LOGO SWAP
+   .logo-dark shows in dark, .logo-light shows in light
+──────────────────────────────── */
+.logo-light { display: none; }
+html.light .logo-dark { display: none; }
+html.light .logo-light { display: inline-block; }
+
+/* ────────────────────────────────
    BADGE
 ──────────────────────────────── */
 .badge-accent {

@@ -23,19 +23,51 @@ const footerLinks = {
   ],
 };
 
-const socials = [
-  { label: "IG", href: "#" },
-  { label: "TW", href: "#" },
-  { label: "LI", href: "#" },
-  { label: "FB", href: "#" },
-];
+interface SocialLinks {
+  instagram?: string | null;
+  twitter?: string | null;
+  facebook?: string | null;
+  linkedin?: string | null;
+  youtube?: string | null;
+  tiktok?: string | null;
+}
 
 interface FooterProps {
   logoUrl?: string | null;
+  logoUrlLight?: string | null;
   logoHeight?: number;
+  socials?: SocialLinks;
 }
 
-export function Footer({ logoUrl, logoHeight = 32 }: FooterProps) {
+const SOCIAL_FALLBACK: SocialLinks = {
+  instagram: "#", twitter: "#", linkedin: "#", facebook: "#",
+};
+
+const SOCIAL_LABELS: { key: keyof SocialLinks; label: string }[] = [
+  { key: "instagram", label: "IG" },
+  { key: "twitter", label: "TW" },
+  { key: "linkedin", label: "LI" },
+  { key: "facebook", label: "FB" },
+  { key: "youtube", label: "YT" },
+  { key: "tiktok", label: "TT" },
+];
+
+/* Theme-aware footer logo */
+function FooterLogo({ dark, light, height }: { dark: string; light: string | null; height: number }) {
+  const lightSrc = light ?? dark;
+  return (
+    <>
+      <Image src={dark} alt="Nuun Media" width={height * 4} height={height} style={{ height }} className="logo-dark w-auto object-contain group-hover:scale-105 transition-transform duration-300" unoptimized />
+      <Image src={lightSrc} alt="Nuun Media" width={height * 4} height={height} style={{ height }} className="logo-light w-auto object-contain group-hover:scale-105 transition-transform duration-300" unoptimized />
+    </>
+  );
+}
+
+export function Footer({ logoUrl, logoUrlLight, logoHeight = 36, socials }: FooterProps) {
+  const socialLinks = socials ?? SOCIAL_FALLBACK;
+  const activeSocials = SOCIAL_LABELS
+    .map((s) => ({ ...s, href: socialLinks[s.key] }))
+    .filter((s) => s.href && s.href.trim());
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
 
@@ -66,7 +98,7 @@ export function Footer({ logoUrl, logoHeight = 32 }: FooterProps) {
           <div className="sm:col-span-2 text-center sm:text-left flex flex-col items-center sm:items-start">
             <Link href="/" className="inline-flex items-center gap-2.5 mb-5 group">
               {logoUrl ? (
-                <Image src={logoUrl} alt="Nuun Media" width={logoHeight * 4} height={logoHeight} style={{ height: logoHeight }} className="w-auto object-contain group-hover:scale-105 transition-transform duration-300" />
+                <FooterLogo dark={logoUrl} light={logoUrlLight ?? null} height={logoHeight} />
               ) : (
                 <>
                   <NuunLogoMark height={30} className="group-hover:scale-105 transition-transform duration-300" />
@@ -164,10 +196,12 @@ export function Footer({ logoUrl, logoHeight = 32 }: FooterProps) {
             © 2026 Nuun Media. All rights reserved.
           </p>
           <div className="flex items-center gap-2 order-1 sm:order-2">
-            {socials.map(({ label, href }) => (
+            {activeSocials.map(({ label, href }) => (
               <a
                 key={label}
-                href={href}
+                href={href ?? "#"}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-8 h-8 flex items-center justify-center rounded-lg text-xs font-bold transition-all duration-200 hover:text-[#FFD400] hover:bg-[#FFD400]/10"
                 style={{
                   background: "var(--surface)",

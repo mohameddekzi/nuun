@@ -23,10 +23,22 @@ const navLinks = [
 
 interface HeaderProps {
   logoUrl?: string | null;
+  logoUrlLight?: string | null;
   logoHeight?: number;
 }
 
-export function Header({ logoUrl, logoHeight = 32 }: HeaderProps) {
+/* Renders theme-aware logo: dark variant in dark mode, light variant in light mode */
+function ThemeLogo({ dark, light, height, alt }: { dark: string; light: string | null; height: number; alt: string }) {
+  const lightSrc = light ?? dark;
+  return (
+    <>
+      <Image src={dark} alt={alt} width={height * 4} height={height} style={{ height }} className="logo-dark w-auto object-contain" unoptimized />
+      <Image src={lightSrc} alt={alt} width={height * 4} height={height} style={{ height }} className="logo-light w-auto object-contain" unoptimized />
+    </>
+  );
+}
+
+export function Header({ logoUrl, logoUrlLight, logoHeight = 32 }: HeaderProps) {
   const [scrolled, setScrolled]   = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
@@ -48,7 +60,7 @@ export function Header({ logoUrl, logoHeight = 32 }: HeaderProps) {
   const Logo = () => (
     <Link href="/" className="flex items-center gap-3 group w-fit">
       {logoUrl ? (
-        <Image src={logoUrl} alt="Nuun Media" width={logoHeight * 4} height={logoHeight} style={{ height: logoHeight }} className="w-auto object-contain" />
+        <ThemeLogo dark={logoUrl} light={logoUrlLight ?? null} height={logoHeight} alt="Nuun Media" />
       ) : (
         <>
           <NuunLogoMark height={28} className="group-hover:scale-105 transition-transform duration-300" />
@@ -63,7 +75,7 @@ export function Header({ logoUrl, logoHeight = 32 }: HeaderProps) {
   const MobileLogo = () => (
     <Link href="/" className="flex items-center gap-2.5 group">
       {logoUrl ? (
-        <Image src={logoUrl} alt="Nuun Media" width={logoHeight * 3} height={logoHeight - 4} style={{ height: Math.max(logoHeight - 6, 20) }} className="w-auto object-contain" />
+        <ThemeLogo dark={logoUrl} light={logoUrlLight ?? null} height={Math.max(logoHeight - 6, 20)} alt="Nuun Media" />
       ) : (
         <>
           <NuunLogoMark height={25} className="group-hover:scale-105 transition-transform" />
@@ -190,7 +202,7 @@ export function Header({ logoUrl, logoHeight = 32 }: HeaderProps) {
                 style={{ borderBottom: "1px solid var(--mobile-drawer-border)" }}
               >
                 {logoUrl ? (
-                  <Image src={logoUrl} alt="Nuun Media" width={logoHeight * 2} height={logoHeight - 10} style={{ height: Math.max(logoHeight - 12, 18) }} className="w-auto object-contain" />
+                  <ThemeLogo dark={logoUrl} light={logoUrlLight ?? null} height={Math.max(logoHeight - 12, 18)} alt="Nuun Media" />
                 ) : (
                   <div className="flex items-center gap-2.5">
                     <NuunLogoMark height={21} />

@@ -13,7 +13,7 @@ export function ThemeProvider({
     <NextThemesProvider
       attribute="class"
       defaultTheme={defaultTheme}
-      enableSystem={false}
+      enableSystem={true}
       disableTransitionOnChange={false}
     >
       {children}
