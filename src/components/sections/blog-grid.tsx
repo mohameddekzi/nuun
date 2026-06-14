@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, type Variants } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Clock, Calendar } from "lucide-react";
 import { format } from "date-fns";
 import type { BlogPost, BlogCategory } from "@/lib/types/database";
@@ -70,11 +71,16 @@ export function BlogGrid({ posts, categories }: BlogGridProps) {
             <motion.article
               key={post.id}
               variants={item}
-              className="group card card-lift overflow-hidden cursor-pointer"
+              className="group card card-lift overflow-hidden"
             >
+              <Link href={`/blog/${post.slug || post.id}`} className="block">
               {/* Cover */}
               <div className="aspect-video bg-gradient-to-br from-[#FFD400]/10 via-white/5 to-transparent relative overflow-hidden">
-                <div className="absolute inset-0 dot-pattern opacity-20" />
+                {post.cover_image ? (
+                  <Image src={post.cover_image} alt={post.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" unoptimized />
+                ) : (
+                  <div className="absolute inset-0 dot-pattern opacity-20" />
+                )}
                 {post.is_featured && (
                   <div className="absolute top-3 left-3">
                     <span className="badge-accent text-[10px] px-2.5 py-1">Featured</span>
@@ -112,6 +118,7 @@ export function BlogGrid({ posts, categories }: BlogGridProps) {
                   <ArrowRight size={13} className="text-white/30 group-hover:text-[#FFD400] group-hover:translate-x-1 transition-all" />
                 </div>
               </div>
+              </Link>
             </motion.article>
           ))}
         </motion.div>

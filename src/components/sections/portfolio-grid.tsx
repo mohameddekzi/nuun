@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import type { Project, ProjectCategory } from "@/lib/types/database";
 
@@ -52,8 +54,17 @@ export function PortfolioGrid({ projects, categories }: PortfolioGridProps) {
                   project.is_featured ? "sm:col-span-2" : ""
                 }`}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#FFD400]/10 via-white/5 to-transparent" />
-                <div className="absolute inset-0 grid-pattern opacity-30" />
+                {/* Clickable overlay */}
+                <Link href={`/portfolio/${project.slug || project.id}`} className="absolute inset-0 z-20" aria-label={project.title} />
+
+                {project.cover_image ? (
+                  <Image src={project.cover_image} alt={project.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" unoptimized />
+                ) : (
+                  <>
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#FFD400]/10 via-white/5 to-transparent" />
+                    <div className="absolute inset-0 grid-pattern opacity-30" />
+                  </>
+                )}
 
                 {/* Hover overlay */}
                 <div className="absolute inset-0 p-5 sm:p-6 flex flex-col justify-end bg-gradient-to-t from-[#0A0A0A]/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">

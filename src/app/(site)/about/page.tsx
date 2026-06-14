@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AboutSection } from "@/components/sections/about-section";
+import { TeamSection } from "@/components/sections/team-section";
 import { CTASection } from "@/components/sections/cta-section";
 import { AboutHero } from "@/components/sections/about-hero";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
@@ -17,6 +18,7 @@ export default async function AboutPage() {
     <>
       <AboutHero />
       <AboutSection />
+      <TeamSection team={team ?? []} />
       <CTASection />
     </>
   );

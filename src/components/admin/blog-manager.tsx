@@ -7,6 +7,7 @@ import { Modal } from "./modal";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { ImageUpload } from "@/components/ui/image-upload";
 import { format } from "date-fns";
 import type { BlogPost, BlogCategory } from "@/lib/types/database";
 
@@ -22,20 +23,21 @@ export function BlogManager({ initialPosts, categories }: BlogManagerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [editing, setEditing] = useState<PostWithCat | null>(null);
   const [form, setForm] = useState({
-    title: "", slug: "", excerpt: "", content: "",
+    title: "", slug: "", excerpt: "", content: "", cover_image: "",
+    seo_title: "", seo_description: "",
     category_id: "", read_time: 5, is_published: false, is_featured: false
   });
   const [loading, setLoading] = useState(false);
 
   const openAdd = () => {
     setEditing(null);
-    setForm({ title: "", slug: "", excerpt: "", content: "", category_id: categories[0]?.id ?? "", read_time: 5, is_published: false, is_featured: false });
+    setForm({ title: "", slug: "", excerpt: "", content: "", cover_image: "", seo_title: "", seo_description: "", category_id: categories[0]?.id ?? "", read_time: 5, is_published: false, is_featured: false });
     setIsOpen(true);
   };
 
   const openEdit = (p: PostWithCat) => {
     setEditing(p);
-    setForm({ title: p.title, slug: p.slug ?? "", excerpt: p.excerpt ?? "", content: p.content ?? "", category_id: p.category_id ?? "", read_time: p.read_time, is_published: p.is_published, is_featured: p.is_featured });
+    setForm({ title: p.title, slug: p.slug ?? "", excerpt: p.excerpt ?? "", content: p.content ?? "", cover_image: p.cover_image ?? "", seo_title: p.seo_title ?? "", seo_description: p.seo_description ?? "", category_id: p.category_id ?? "", read_time: p.read_time, is_published: p.is_published, is_featured: p.is_featured });
     setIsOpen(true);
   };
 
@@ -84,6 +86,16 @@ export function BlogManager({ initialPosts, categories }: BlogManagerProps) {
           <Input label="Title *" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
           <Input label="Slug" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} placeholder="my-blog-post" />
           <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-white/70">Cover Image</label>
+            <ImageUpload
+              value={form.cover_image || null}
+              onChange={(url) => setForm({ ...form, cover_image: url ?? "" })}
+              folder="blog"
+              label="Upload cover"
+              aspectRatio="aspect-video"
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-white/70">Category</label>
             <select value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })} className="h-12 px-4 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:outline-none">
               {categories.map((c) => <option key={c.id} value={c.id} className="bg-[#0A0A0A]">{c.name}</option>)}
@@ -92,6 +104,14 @@ export function BlogManager({ initialPosts, categories }: BlogManagerProps) {
           <Textarea label="Excerpt" value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} rows={2} />
           <Textarea label="Content" value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} rows={8} />
           <Input label="Read Time (minutes)" type="number" value={form.read_time} onChange={(e) => setForm({ ...form, read_time: Number(e.target.value) })} />
+
+          {/* SEO */}
+          <div className="pt-2 border-t border-white/[0.06] space-y-4">
+            <p className="text-[#FFD400] text-xs font-bold tracking-widest uppercase">SEO (optional)</p>
+            <Input label="SEO Title" value={form.seo_title} onChange={(e) => setForm({ ...form, seo_title: e.target.value })} placeholder="Defaults to post title" />
+            <Textarea label="Meta Description" value={form.seo_description} onChange={(e) => setForm({ ...form, seo_description: e.target.value })} rows={2} placeholder="150–160 characters for Google results" />
+          </div>
+
           <div className="flex gap-6">
             <label className="flex items-center gap-2 text-sm text-white/70 cursor-pointer">
               <input type="checkbox" checked={form.is_published} onChange={(e) => setForm({ ...form, is_published: e.target.checked })} className="accent-[#FFD400]" />

@@ -7,7 +7,10 @@ import { Modal } from "./modal";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import type { Project, ProjectCategory } from "@/lib/types/database";
+import { ImageUpload } from "@/components/ui/image-upload";
+import Image from "next/image";
+import { X } from "lucide-react";
+import type { Project, ProjectCategory, Json } from "@/lib/types/database";
 
 type ProjectWithCat = Project & { project_categories: { name: string } | null };
 
@@ -21,28 +24,32 @@ export function PortfolioManager({ initialProjects, categories }: PortfolioManag
   const [isOpen, setIsOpen] = useState(false);
   const [editing, setEditing] = useState<ProjectWithCat | null>(null);
   const [form, setForm] = useState({
-    title: "", slug: "", description: "", client: "",
+    title: "", slug: "", description: "", client: "", cover_image: "",
+    images: [] as string[],
     category_id: "", year: new Date().getFullYear(),
     is_featured: false, order_index: 0
   });
   const [loading, setLoading] = useState(false);
 
+  const toImages = (v: Json | null | undefined): string[] =>
+    Array.isArray(v) ? (v as unknown[]).filter((x): x is string => typeof x === "string") : [];
+
   const openAdd = () => {
     setEditing(null);
-    setForm({ title: "", slug: "", description: "", client: "", category_id: categories[0]?.id ?? "", year: new Date().getFullYear(), is_featured: false, order_index: projects.length });
+    setForm({ title: "", slug: "", description: "", client: "", cover_image: "", images: [], category_id: categories[0]?.id ?? "", year: new Date().getFullYear(), is_featured: false, order_index: projects.length });
     setIsOpen(true);
   };
 
   const openEdit = (p: ProjectWithCat) => {
     setEditing(p);
-    setForm({ title: p.title, slug: p.slug ?? "", description: p.description ?? "", client: p.client ?? "", category_id: p.category_id ?? "", year: p.year ?? new Date().getFullYear(), is_featured: p.is_featured, order_index: p.order_index });
+    setForm({ title: p.title, slug: p.slug ?? "", description: p.description ?? "", client: p.client ?? "", cover_image: p.cover_image ?? "", images: toImages(p.images), category_id: p.category_id ?? "", year: p.year ?? new Date().getFullYear(), is_featured: p.is_featured, order_index: p.order_index });
     setIsOpen(true);
   };
 
   const handleSave = async () => {
     setLoading(true);
     const supabase = createClient();
-    const payload = { ...form, year: Number(form.year) };
+    const payload = { ...form, year: Number(form.year), images: form.images as unknown as Json };
     if (editing) {
       const { data } = await supabase.from("projects").update(payload).eq("id", editing.id).select("*, project_categories(name)").single();
       if (data) setProjects((prev) => prev.map((p) => p.id === editing.id ? data as ProjectWithCat : p));
@@ -97,6 +104,46 @@ export function PortfolioManager({ initialProjects, categories }: PortfolioManag
           </div>
           <Input label="Year" type="number" value={form.year} onChange={(e) => setForm({ ...form, year: Number(e.target.value) })} />
           <Textarea label="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} />
+
+          {/* Cover image */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-white/70">Cover Image</label>
+            <ImageUpload
+              value={form.cover_image || null}
+              onChange={(url) => setForm({ ...form, cover_image: url ?? "" })}
+              folder="portfolio"
+              label="Upload cover"
+              aspectRatio="aspect-video"
+            />
+          </div>
+
+          {/* Gallery */}
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-white/70">Gallery Images</label>
+            {form.images.length > 0 && (
+              <div className="grid grid-cols-3 gap-2">
+                {form.images.map((src, i) => (
+                  <div key={i} className="relative aspect-video rounded-lg overflow-hidden border border-white/10 group">
+                    <Image src={src} alt={`Image ${i + 1}`} fill className="object-cover" unoptimized />
+                    <button
+                      type="button"
+                      onClick={() => setForm({ ...form, images: form.images.filter((_, idx) => idx !== i) })}
+                      className="absolute top-1 right-1 w-6 h-6 rounded-md bg-red-500/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X size={12} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <ImageUpload
+              value={null}
+              onChange={(url) => { if (url) setForm({ ...form, images: [...form.images, url] }); }}
+              folder="portfolio"
+              label="Add gallery image"
+              aspectRatio="aspect-video"
+            />
+          </div>
           <div className="flex items-center gap-3">
             <input type="checkbox" id="featured" checked={form.is_featured} onChange={(e) => setForm({ ...form, is_featured: e.target.checked })} className="accent-[#FFD400]" />
             <label htmlFor="featured" className="text-sm text-white/70">Featured project</label>
