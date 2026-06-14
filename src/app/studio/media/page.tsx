@@ -8,12 +8,10 @@ export default async function MediaAdminPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/studio/login");
 
-  const { data: media } = await supabase.from("media").select("*").order("created_at", { ascending: false });
-
   return (
     <AdminLayout>
       <div className="p-8">
-        <MediaLibrary initialMedia={media ?? []} userId={user.id} />
+        <MediaLibrary userId={user.id} />
       </div>
     </AdminLayout>
   );

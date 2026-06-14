@@ -1,20 +1,28 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { motion } from "framer-motion";
-import { Upload, Trash2, Copy, Search, Grid, List, Image as ImgIcon } from "lucide-react";
+import { Upload, Trash2, Copy, Search, Grid, List, Image as ImgIcon, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import type { Media } from "@/lib/types/database";
 
 interface MediaLibraryProps {
-  initialMedia: Media[];
   userId: string;
 }
 
-export function MediaLibrary({ initialMedia, userId }: MediaLibraryProps) {
-  const [media, setMedia] = useState(initialMedia);
+export function MediaLibrary({ userId }: MediaLibraryProps) {
+  const [media, setMedia] = useState<Media[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/media")
+      .then((r) => r.json())
+      .then((j) => setMedia(j.data ?? []))
+      .catch(() => setMedia([]))
+      .finally(() => setLoading(false));
+  }, []);
   const [uploading, setUploading] = useState(false);
   const [search, setSearch] = useState("");
   const [view, setView] = useState<"grid" | "list">("grid");
@@ -45,7 +53,12 @@ export function MediaLibrary({ initialMedia, userId }: MediaLibraryProps) {
         uploaded_by: userId,
       }).select().single();
 
-      if (data) setMedia((prev) => [data, ...prev]);
+      const newRow = data ?? {
+        id: path, name: file.name, file_path: path, file_url: urlData.publicUrl,
+        file_type: file.type, file_size: file.size, folder: "media",
+        alt_text: null, caption: null, uploaded_by: userId, created_at: new Date().toISOString(),
+      };
+      setMedia((prev) => [newRow as Media, ...prev]);
     }
     setUploading(false);
   };
@@ -108,8 +121,15 @@ export function MediaLibrary({ initialMedia, userId }: MediaLibraryProps) {
         <p className="text-white/20 text-xs mt-1">Images, videos, PDFs supported</p>
       </div>
 
+      {/* Loading */}
+      {loading && (
+        <div className="flex items-center justify-center py-20">
+          <Loader2 size={28} className="text-[#FFD400] animate-spin" />
+        </div>
+      )}
+
       {/* Grid view */}
-      {view === "grid" && (
+      {!loading && view === "grid" && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {filtered.map((item, i) => (
             <motion.div
@@ -143,7 +163,7 @@ export function MediaLibrary({ initialMedia, userId }: MediaLibraryProps) {
       )}
 
       {/* List view */}
-      {view === "list" && (
+      {!loading && view === "list" && (
         <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl overflow-hidden">
           <table className="w-full">
             <thead>
