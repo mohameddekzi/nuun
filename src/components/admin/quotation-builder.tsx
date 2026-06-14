@@ -40,11 +40,12 @@ interface QuotationBuilderProps {
 
 const CURRENCIES = ["USD", "EUR", "GBP", "SOS", "KES", "ETB", "SAR", "AED"];
 const STATUSES = [
-  { value: "draft", label: "Draft", color: "text-white/50" },
-  { value: "sent", label: "Sent", color: "text-blue-400" },
-  { value: "accepted", label: "Accepted", color: "text-green-400" },
-  { value: "declined", label: "Declined", color: "text-red-400" },
-  { value: "invoiced", label: "Invoiced", color: "text-[#FFD400]" },
+  { value: "draft",    label: "Draft",    color: "text-white/50"   },
+  { value: "sent",     label: "Sent",     color: "text-blue-400"   },
+  { value: "accepted", label: "Accepted", color: "text-green-400"  },
+  { value: "declined", label: "Declined", color: "text-red-400"    },
+  { value: "invoiced", label: "Invoiced", color: "text-[#FFD400]"  },
+  { value: "paid",     label: "Paid",     color: "text-emerald-400"},
 ];
 
 function SortableItem({
@@ -179,7 +180,14 @@ export function QuotationBuilder({ quotation, items: initialItems = [], userId, 
   const handleSave = async (newStatus?: string) => {
     setSaving(true);
     const supabase = createClient();
-    const data = { ...form, status: newStatus ?? form.status, created_by: userId };
+    const nextStatus = newStatus ?? form.status;
+    const data = {
+      ...form,
+      status: nextStatus,
+      created_by: userId,
+      total_amount: total,
+      ...(nextStatus === "paid" ? { paid_at: new Date().toISOString() } : {}),
+    };
 
     let qId = quoteId;
     let qNum = quoteNumber;

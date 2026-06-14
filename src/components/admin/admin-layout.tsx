@@ -7,20 +7,23 @@ import { AdminSidebar } from "./sidebar";
 import { Menu, Sun, Moon, Bell } from "lucide-react";
 
 const pageTitles: Record<string, string> = {
-  "/studio/dashboard": "Dashboard",
-  "/studio/services": "Services",
-  "/studio/portfolio": "Portfolio",
-  "/studio/blog": "Blog",
+  "/studio/dashboard":    "Dashboard",
+  "/studio/services":     "Services",
+  "/studio/portfolio":    "Portfolio",
+  "/studio/blog":         "Blog",
   "/studio/testimonials": "Testimonials",
-  "/studio/pricing": "Pricing",
-  "/studio/faq": "FAQ",
-  "/studio/clients": "Clients",
-  "/studio/quotations": "Quotations",
-  "/studio/contact": "Messages",
-  "/studio/team": "Team",
-  "/studio/media": "Media Library",
-  "/studio/subscribers": "Subscribers",
-  "/studio/settings": "Settings",
+  "/studio/pricing":      "Pricing",
+  "/studio/faq":          "FAQ",
+  "/studio/clients":      "Clients",
+  "/studio/sales":        "Sales Overview",
+  "/studio/quotations":   "Quotations",
+  "/studio/invoices":     "Invoices",
+  "/studio/receipts":     "Receipts",
+  "/studio/contact":      "Messages",
+  "/studio/team":         "Team",
+  "/studio/media":        "Media Library",
+  "/studio/subscribers":  "Subscribers",
+  "/studio/settings":     "Settings",
 };
 
 function getPageTitle(pathname: string): string {

@@ -6,11 +6,12 @@ import { Plus, FileText, Receipt } from "lucide-react";
 import type { Quotation } from "@/lib/types/database";
 
 const STATUS_STYLES: Record<string, string> = {
-  draft: "text-white/40 bg-white/5",
-  sent: "text-blue-400 bg-blue-400/10",
+  draft:    "text-white/40 bg-white/5",
+  sent:     "text-blue-400 bg-blue-400/10",
   accepted: "text-green-400 bg-green-400/10",
   declined: "text-red-400 bg-red-400/10",
   invoiced: "text-[#FFD400] bg-[#FFD400]/10",
+  paid:     "text-emerald-400 bg-emerald-400/10",
 };
 
 export default async function QuotationsPage() {
