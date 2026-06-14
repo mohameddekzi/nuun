@@ -44,7 +44,7 @@ export function ImageUpload({
       const { data } = supabase.storage.from("media").getPublicUrl(path);
 
       /* also insert a row into the media table so it appears in the library */
-      await supabase.from("media").insert({
+      const { error: dbError } = await supabase.from("media").insert({
         name: file.name,
         file_path: path,
         file_url: data.publicUrl,
@@ -52,6 +52,7 @@ export function ImageUpload({
         file_size: file.size,
         folder,
       });
+      if (dbError) console.warn("media table insert failed:", dbError.message);
 
       onChange(data.publicUrl);
     } catch (e: unknown) {
