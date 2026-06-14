@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTheme } from "next-themes";
 import { createClient } from "@/lib/supabase/client";
 import { ImageUpload } from "@/components/ui/image-upload";
 import {
@@ -21,15 +22,14 @@ function str(v: unknown): string {
 
 const supabase = createClient();
 
-/** Create the settings row if missing, otherwise update it. */
-async function upsertSetting(key: string, value: unknown, category: string) {
+/** Create the settings row if missing, otherwise update it. Returns an error message on failure, or null on success. */
+async function upsertSetting(key: string, value: unknown, category: string): Promise<string | null> {
   const { data: existing } = await supabase
     .from("settings").select("id").eq("key", key).maybeSingle();
-  if (existing?.id) {
-    await supabase.from("settings").update({ value: value as Json }).eq("id", existing.id);
-  } else {
-    await supabase.from("settings").insert({ key, value: value as Json, category });
-  }
+  const { error } = existing?.id
+    ? await supabase.from("settings").update({ value: value as Json }).eq("id", existing.id)
+    : await supabase.from("settings").insert({ key, value: value as Json, category });
+  return error?.message ?? null;
 }
 
 /* ─── sidebar sections ─────────────────────── */
@@ -98,16 +98,19 @@ function FieldRow({
   value: string;
   multiline?: boolean;
   placeholder?: string;
-  onSave: (val: string) => Promise<void>;
+  onSave: (val: string) => Promise<string | null | void>;
 }) {
   const [draft, setDraft] = useState(value);
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const save = async () => {
     setLoading(true);
-    await onSave(draft);
+    setError(null);
+    const err = await onSave(draft);
     setLoading(false);
+    if (err) { setError(err); return; }
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   };
@@ -122,6 +125,7 @@ function FieldRow({
         <SavedBadge visible={saved} />
       </div>
       {hint && <p className="text-white/30 text-xs">{hint}</p>}
+      {error && <p className="text-xs text-red-400">Could not save: {error}</p>}
       {multiline ? (
         <textarea
           value={draft} onChange={(e) => setDraft(e.target.value)} rows={3} placeholder={placeholder}
@@ -262,12 +266,22 @@ function BrandingSection({ settings }: { settings: Setting[] }) {
   const get = (k: string) => settings.find((s) => s.key === k);
   const sval = (k: string) => { const v = get(k)?.value; return typeof v === "string" && v.trim() ? v : null; };
 
+  const { setTheme: applyTheme } = useTheme();
   const [theme, setTheme] = useState(str(get("theme_default")?.value) || "dark");
   const [themeSaved, setThemeSaved] = useState(false);
+  const [themeError, setThemeError] = useState<string | null>(null);
 
   const saveTheme = async (v: "dark" | "light" | "system") => {
-    setTheme(v);
-    await upsertSetting("theme_default", v, "branding");
+    const prev = theme;
+    setTheme(v);          // optimistic — highlight the chosen card immediately
+    applyTheme(v);        // apply live so the choice is visibly active right away
+    setThemeError(null);
+    const err = await upsertSetting("theme_default", v, "branding");
+    if (err) {
+      setTheme(prev);     // revert highlight if the save was rejected
+      setThemeError(err);
+      return;
+    }
     setThemeSaved(true);
     setTimeout(() => setThemeSaved(false), 2500);
   };
@@ -286,6 +300,9 @@ function BrandingSection({ settings }: { settings: Setting[] }) {
             <ThemeCard value="light"  active={theme === "light"}  onSelect={() => saveTheme("light")} />
             <ThemeCard value="system" active={theme === "system"} onSelect={() => saveTheme("system")} />
           </div>
+          {themeError && (
+            <p className="mt-3 text-xs text-red-400">Could not save: {themeError}</p>
+          )}
         </div>
       </SectionCard>
 
