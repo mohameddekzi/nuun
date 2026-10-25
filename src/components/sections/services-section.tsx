@@ -11,6 +11,25 @@ const iconMap: Record<string, React.ComponentType<{ size?: number; className?: s
 
 interface ServicesSectionProps { services: Service[]; }
 
+/* Minimal shape the card needs — lets us fall back to defaults when the
+   DB returns no rows (empty table or blocked read), so the home page is
+   never left with a broken empty gap. */
+type CardService = {
+  id: string;
+  title: string;
+  short_description: string | null;
+  icon: string | null;
+  slug?: string | null;
+};
+
+const DEFAULT_SERVICES: CardService[] = [
+  { id: "d1", title: "Brand & Visual Identity", short_description: "Scalable brand ecosystems and corporate identity systems.", icon: "Palette", slug: "brand-visual-identity" },
+  { id: "d2", title: "Media Production", short_description: "Full-cycle video production optimized for corporate communication.", icon: "Video", slug: "media-production" },
+  { id: "d3", title: "Motion & Digital Content", short_description: "High-quality motion graphics, animation, and digital storytelling.", icon: "Zap", slug: "motion-digital-content" },
+  { id: "d4", title: "Social Media & Digital", short_description: "Strategic content development and performance-focused campaigns.", icon: "Share2", slug: "social-media-digital" },
+  { id: "d5", title: "Event Branding", short_description: "End-to-end branding solutions for events and activations.", icon: "Star", slug: "event-branding" },
+];
+
 const list: Variants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.09 } },
@@ -21,6 +40,10 @@ const item: Variants = {
 };
 
 export function ServicesSection({ services }: ServicesSectionProps) {
+  const displayServices: CardService[] = services.length
+    ? (services as CardService[])
+    : DEFAULT_SERVICES;
+
   return (
     <section className="relative section-padding overflow-hidden" style={{ background: "var(--bg-alt)" }}>
       <div className="absolute inset-0 dot-pattern pointer-events-none" />
@@ -55,7 +78,7 @@ export function ServicesSection({ services }: ServicesSectionProps) {
           viewport={{ once: true, margin: "-80px" }}
           className="flex flex-wrap justify-center gap-5 sm:gap-6 lg:gap-7"
         >
-          {services.map((service, i) => {
+          {displayServices.map((service, i) => {
             const Icon = iconMap[service.icon || "Star"] || Star;
             return (
               <motion.div
