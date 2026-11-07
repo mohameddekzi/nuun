@@ -190,7 +190,7 @@ body.tu-no-hero .tu-main { padding-top: 88px; }
 .tu-numrow__text { font-size: 15px !important; color: #4B4D55; line-height: 1.6; margin-top: 6px !important; }
 
 /* service grid (services page) */
-.tu-svcgrid { gap: 0 32px !important; }
+.tu-svcgrid { gap: 0 24px !important; }
 .tu-svcgrid .tu-numrow { border-bottom: 1px solid #E6E7EA; padding: 26px 0; }
 .tu-svcgrid .tu-numrow__title { font-size: 17px !important; }
 
