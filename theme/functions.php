@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TUREAS_VERSION', '1.0.0' );
+define( 'TUREAS_VERSION', '1.0.0.' . filemtime( __DIR__ . '/style.css' ) );
 
 add_action( 'after_setup_theme', function () {
 	add_theme_support( 'editor-styles' );

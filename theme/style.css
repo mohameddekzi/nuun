@@ -136,7 +136,7 @@ body.tu-no-hero .tu-main { padding-top: 88px; }
 .tu-section--flush-bottom { padding-bottom: 0 !important; }
 .tu-split { gap: clamp(40px, 5vw, 80px) !important; }
 .tu-split h2 { margin-top: 24px !important; }
-.tu-split .tu-text { margin-top: 0; }
+
 .wp-block-columns.tu-split { margin-bottom: 0; }
 
 /* stats */
