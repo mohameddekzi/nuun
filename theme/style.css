@@ -312,3 +312,12 @@ body.tu-no-hero .tu-main { padding-top: 88px; }
 	body.tu-no-hero .tu-main { padding-top: 76px; }
 	.tu-value { padding: 32px 24px !important; }
 }
+
+/* Mobile overlay menu: left aligned, full-width rows */
+.tu-nav .is-menu-open .wp-block-navigation__responsive-container-content,
+.tu-nav .is-menu-open .wp-block-navigation__container { align-items: stretch !important; justify-content: flex-start !important; text-align: left; }
+.tu-nav .is-menu-open .wp-block-navigation-item { align-items: stretch !important; }
+.tu-nav .is-menu-open .wp-block-navigation-item__content { width: 100%; text-align: left; }
+.tu-nav .is-menu-open .current-menu-item > .wp-block-navigation-item__content { color: #E31E24 !important; }
+.tu-nav .is-menu-open .current-menu-item > .wp-block-navigation-item__content::after { display: none; }
+.tu-nav .is-menu-open .tu-nav-cta > .wp-block-navigation-item__content { text-align: center; color: #fff !important; }
